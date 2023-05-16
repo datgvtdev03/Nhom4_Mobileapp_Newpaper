@@ -1,9 +1,16 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 
-const LoginScreen = ({ navigation }) => {
+const ChangePasswordScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
 
@@ -22,7 +29,7 @@ const LoginScreen = ({ navigation }) => {
 
       <View style={styles.viewBottom}>
         <Text style={{ fontWeight: "bold", fontSize: 24, color: "#225254" }}>
-          ĐĂNG NHẬP
+          ĐỔI MẬT KHẨU
         </Text>
         <View
           style={{
@@ -34,44 +41,30 @@ const LoginScreen = ({ navigation }) => {
         />
 
         <View style={styles.viewTextInput}>
-          <CustomTextInput placeholder="Email" />
+          <CustomTextInput placeholder="Mật khẩu cũ" />
 
-          <Image
-            style={{ width: 20, height: 14 }}
-            source={require("../../../assets/mail.png")}
-          />
+          <Image source={require("../../../assets/locked.png")} />
         </View>
 
         <View style={styles.viewTextInput}>
-          <CustomTextInput
-            placeholder="Mật khẩu"
-            secureTextEntry={!passwordVisible}
-            value={password}
-            onChangeText={setPassword}
-          />
+          <CustomTextInput placeholder="Mật khẩu mới" />
 
-          <TouchableOpacity onPress={togglePasswordVisibility}>
-            <Image
-              style={{ width: 20, height: 14 }}
-              source={
-                passwordVisible
-                  ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
-                  : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
-              }
-            />
-          </TouchableOpacity>
+          <Image source={require("../../../assets/locked.png")} />
         </View>
 
-        <CustomButton title="ĐĂNG NHẬP" />
+        <View style={styles.viewTextInput}>
+          <CustomTextInput placeholder="Nhập lại mật khẩu mới" />
+
+          <Image source={require("../../../assets/locked.png")} />
+        </View>
+
+        <CustomButton title="ĐỔI MẬT KHẨU" />
         <Text style={styles.textOr}>HOẶC</Text>
         <CustomButton
-          title="ĐĂNG KÍ"
+          title="HUỶ"
           style={styles.btnSignup}
-          onPress={() => navigation.navigate("Signup")}
+          onPress={() => navigation.navigate("Login")}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("ChangePW")}>
-          <Text style={{ textDecorationLine: "underline" }}>Bỏ qua</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -84,7 +77,7 @@ const styles = StyleSheet.create({
   },
 
   viewBottom: {
-    flex: 5.5,
+    flex: 6.5,
     flexDirection: "column",
     backgroundColor: "white",
     borderTopRightRadius: 60,
@@ -112,4 +105,4 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-export default LoginScreen;
+export default ChangePasswordScreen;
