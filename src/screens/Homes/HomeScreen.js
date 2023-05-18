@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  FlatList
 } from "react-native";
 
 import SlideShow from "../../Shared/SlideShow";
@@ -18,6 +19,19 @@ import CustomTextInput from "../../Shared/CustomTextInput";
 const HomeScreen = ({ navigation }) => {
   const [greeting, setGreeting] = useState("");
   const [selectedButton, setSelectedButton] = useState(null);
+  const [data, setData] = useState(null);
+
+
+  const getDataFromAPI = async () => {
+    try {
+      const response = await fetch("https://632c7f2b5568d3cad8870c47.mockapi.io/friends");
+      const data = await response.json();
+      setData(data);
+      console.log("data: " + JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleButtonPress = (button) => {
     setSelectedButton(button);
@@ -43,54 +57,66 @@ const HomeScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  // const renderData = () => {
+  //   if (data) {
+  //     return (
+  //       <FlatList
+  //         data={data}
+  //         renderItem={({ item }) => (
+  //           <View style={styles.itemContainer}>
+  //             <Text style={styles.itemText}>{item.title}</Text>
+  //             <Text style={styles.itemDescription}>{item.detail}</Text>
+  //           </View>
+  //         )}
+  //         keyExtractor={(item) => item.id.toString()}
+  //       />
+  //     );
+  //   } else {
+  //     return (
+  //       <View style={styles.dataContainer}>
+  //         <Text style={styles.dataText}>Đang tải dữ liệu...</Text>
+  //       </View>
+  //     );
+  //   }
+  // };
+
+
   const renderData = () => {
-    switch (selectedButton) {
-      case 'Mới':
+    if (data) {
+      
+      const filteredData = data.filter(item => item.loai === selectedButton);
+  
+      if (filteredData.length > 0) {
+        return (
+          <FlatList
+            data={filteredData}
+            renderItem={({ item }) => (
+              <View style={styles.itemContainer}>
+                <Text style={styles.itemText}>{item.title}</Text>
+                <Text style={styles.itemDescription}>{item.detail}</Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        );
+      } else {
         return (
           <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Dữ liệu cho button Mới</Text>
+            <Text style={styles.dataText}>Không có dữ liệu phù hợp</Text>
           </View>
         );
-      case 'Nổi bật':
-        return (
-          <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Dữ liệu cho button Nổi bật</Text>
-          </View>
-        );
-      case 'Thời sự':
-        return (
-          <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Dữ liệu cho button Thời sự</Text>
-          </View>
-        );
-      case 'Thể thao':
-        return (
-          <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Dữ liệu cho button Thể thao</Text>
-          </View>
-        );
-      case 'Pháp luật':
-        return (
-          <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Dữ liệu cho button Pháp luật</Text>
-          </View>
-        );
-      case 'Giáo dục':
-        return (
-          <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Dữ liệu cho button Giáo dục</Text>
-          </View>
-        );
-      case 'Kinh tế':
-        return (
-          <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Dữ liệu cho button Kinh tế</Text>
-          </View>
-        );
-      default:
-        return null;
+      }
+    } else {
+      return (
+        <View style={styles.dataContainer}>
+          <Text style={styles.dataText}>Đang tải dữ liệu...</Text>
+        </View>
+      );
     }
   };
+  
+  
+  
 
   useEffect(() => {
     const currentHour = new Date().getHours();
@@ -104,6 +130,9 @@ const HomeScreen = ({ navigation }) => {
       message = "Good evening";
     }
     setGreeting(message);
+
+    setSelectedButton("Mới");
+    getDataFromAPI()
   }, []);
 
   return (
@@ -146,9 +175,9 @@ const HomeScreen = ({ navigation }) => {
       </View>
 
       <View style={{ flex: 9 }}>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        {renderData()}
-      </View>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          {renderData()}
+        </View>
       </View>
     </View>
   );
@@ -201,13 +230,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   selectedButton: {
-    backgroundColor: "blue",
+    backgroundColor: "#D9F1F4",
   },
   buttonText: {
     color: "black",
   },
   selectedButtonText: {
-    color: "white",
+    color: "#225254",
   },
 });
 
