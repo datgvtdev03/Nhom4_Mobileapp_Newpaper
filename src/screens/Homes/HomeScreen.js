@@ -114,11 +114,8 @@ const HomeScreen = ({ navigation }) => {
       );
     }
   };
-  
-  
-  
 
-  useEffect(() => {
+  const checkHouse = () => {
     const currentHour = new Date().getHours();
     let message = "";
 
@@ -127,10 +124,16 @@ const HomeScreen = ({ navigation }) => {
     } else if (currentHour >= 12 && currentHour < 18) {
       message = "Good afternoon";
     } else {
-      message = "Good evening";
+      message = "Good evening 111";
     }
     setGreeting(message);
+  }
+  
+  
+  
 
+  useEffect(() => {
+    checkHouse();
     setSelectedButton("Mới");
     getDataFromAPI()
   }, []);
