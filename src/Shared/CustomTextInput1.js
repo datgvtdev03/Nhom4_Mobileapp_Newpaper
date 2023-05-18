@@ -11,16 +11,6 @@ const CustomTextInput1 = ({
   secureTextEntry,
 }) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        borderColor: "#225254",
-        borderWidth: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 10,
-      }}
-    >
       <TextInput
         style={[styles.input, style]}
         value={value}
@@ -31,18 +21,17 @@ const CustomTextInput1 = ({
         multiline={multiline}
         secureTextEntry={secureTextEntry}
       />
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
     width: "80%",
-    // borderColor: '#225254',
-    // borderWidth: 1,
-    // padding: 10,
-    // borderRadius: 8,
-    // marginVertical: 10,
+    borderColor: '#225254',
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+    marginVertical: 10,
   },
 });
 export default CustomTextInput1;

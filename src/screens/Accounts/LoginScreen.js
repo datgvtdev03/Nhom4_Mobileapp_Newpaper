@@ -1,11 +1,24 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 
 const LoginScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const onLogin = () => {
+    if(email == '1' && password == '1') {
+      navigation.navigate('TabbarAdmin')
+    } else {
+      navigation.navigate('TabbarUser')
+    }
+  }
+
+
+
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -34,7 +47,7 @@ const LoginScreen = ({ navigation }) => {
         />
 
         <View style={styles.viewTextInput}>
-          <CustomTextInput placeholder="Email" />
+          <CustomTextInput placeholder="Email" value={email} onChangeText={setEmail} />
 
           <Image
             style={{ width: 20, height: 14 }}
@@ -62,14 +75,15 @@ const LoginScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <CustomButton title="ĐĂNG NHẬP" />
+        <CustomButton title="ĐĂNG NHẬP" onPress={onLogin}/>
+
         <Text style={styles.textOr}>HOẶC</Text>
         <CustomButton
           title="ĐĂNG KÍ"
           style={styles.btnSignup}
           onPress={() => navigation.navigate("Signup")}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("ChangePW")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Text style={{ textDecorationLine: "underline" }}>Bỏ qua</Text>
         </TouchableOpacity>
       </View>
