@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Image, ScrollView, Text, Dimensions } from "react-native";
+import { View, StyleSheet, Image, ScrollView, Text, Dimensions, Animated } from "react-native";
 
 const SlideShow = () => {
   const [images, setImages] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollViewRef = useRef(null);
+
+  const animatedValue = new Animated.Value(0);
 
   useEffect(() => {
     getDataFromAPI();
@@ -48,7 +50,7 @@ const SlideShow = () => {
       >
         {images.map((image, index) => (
           <View key={index} style={styles.slide}>
-            <Image source={{ uri: image.image }} style={styles.image} />
+            <Image source={{ uri: image.uri.uri }} style={styles.image} />
           </View>
         ))}
       </ScrollView>
@@ -91,3 +93,6 @@ const styles = StyleSheet.create({
 });
 
 export default SlideShow;
+
+
+

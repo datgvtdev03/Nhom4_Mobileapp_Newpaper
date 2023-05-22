@@ -16,7 +16,7 @@ const CustomTextInput1 = ({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#000000"
+        placeholderTextColor="grey"
         numberOfLines={numberOfLines}
         multiline={multiline}
         secureTextEntry={secureTextEntry}
@@ -29,9 +29,11 @@ const styles = StyleSheet.create({
     width: "80%",
     borderColor: '#225254',
     borderWidth: 1,
-    padding: 10,
+    height: 44,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    marginVertical: 10,
+    marginTop: 5,
+    color: 'grey'
   },
 });
 export default CustomTextInput1;

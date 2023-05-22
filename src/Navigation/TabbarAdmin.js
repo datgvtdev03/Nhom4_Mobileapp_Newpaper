@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "react-native-vector-icons";
 import ProfileScreen from "../screens/Profiles/Profilescreen";
-import AddNewsScreen from "../screens/News/AddNewsScreen";
+import AddOrEditNewsScreen from "../screens/News/AddOrEditNewsScreen";
 
 import HomeScreen from "../screens/Homes/HomeScreen";
 
@@ -11,16 +11,18 @@ const Tab = createBottomTabNavigator();
 const TabbarAdmin = () => {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: "#225254",
-        inactiveTintColor: "gray",
+      screenOptions={{
+        tabBarActiveTintColor: '#225254',
+        tabBarInactiveTintColor: 'gray',
+        // tabBarStyle: { backgroundColor: 'blue' },
+        // Các tùy chọn khác...
       }}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: "HomeTab",
+          tabBarLabel: "Home",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="home" color={color} size={size} />
@@ -28,8 +30,8 @@ const TabbarAdmin = () => {
         }}
       />
       <Tab.Screen
-        name="AddNews"
-        component={AddNewsScreen}
+        name="ADD"
+        component={AddOrEditNewsScreen}
         options={{
           tabBarLabel: 'Add',
           headerShown: false,

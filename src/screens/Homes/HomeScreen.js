@@ -7,8 +7,19 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Alert,
 } from "react-native";
+
+import {
+  Placeholder,
+  PlaceholderMedia,
+  PlaceholderLine,
+  Fade,
+  Loader,
+  Shine,
+  ShineOverlay,
+} from "rn-placeholder";
 
 import SlideShow from "../../Shared/SlideShow";
 import UploadImageScreen from "../../Shared/UploadImageScreen";
@@ -16,18 +27,31 @@ import CustomTextInput1 from "../../Shared/CustomTextInput1";
 import Header from "../../Shared/Header";
 import CustomTextInput from "../../Shared/CustomTextInput";
 
+
 const HomeScreen = ({ navigation }) => {
   const [greeting, setGreeting] = useState("");
   const [selectedButton, setSelectedButton] = useState(null);
   const [data, setData] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    checkHouse();
+    getDataFromAPI();
+    setSelectedButton("Mới");
+  }, []);
+
+
+  
 
   const getDataFromAPI = async () => {
     try {
-      const response = await fetch("https://632c7f2b5568d3cad8870c47.mockapi.io/friends");
+      const response = await fetch(
+        "https://6399d10b16b0fdad774a46a6.mockapi.io/facebook"
+      );
       const data = await response.json();
       setData(data);
-      console.log("data: " + JSON.stringify(data));
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -57,59 +81,87 @@ const HomeScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  // const renderData = () => {
-  //   if (data) {
-  //     return (
-  //       <FlatList
-  //         data={data}
-  //         renderItem={({ item }) => (
-  //           <View style={styles.itemContainer}>
-  //             <Text style={styles.itemText}>{item.title}</Text>
-  //             <Text style={styles.itemDescription}>{item.detail}</Text>
-  //           </View>
-  //         )}
-  //         keyExtractor={(item) => item.id.toString()}
-  //       />
-  //     );
-  //   } else {
-  //     return (
-  //       <View style={styles.dataContainer}>
-  //         <Text style={styles.dataText}>Đang tải dữ liệu...</Text>
-  //       </View>
-  //     );
-  //   }
-  // };
-
+  const handleRefresh = () => {
+    setIsLoading(true);
+    getDataFromAPI();
+  };
 
   const renderData = () => {
     if (data) {
-      
-      const filteredData = data.filter(item => item.loai === selectedButton);
-  
+      // const filteredData = data.filter(
+      //   (item) => item.theLoai.name === selectedButton
+      // );
+
+      const filteredData = data.filter(
+        (item) => item.theLoai && item.theLoai.name === selectedButton
+      );
+
       if (filteredData.length > 0) {
         return (
           <FlatList
             data={filteredData}
             renderItem={({ item }) => (
-              <View style={styles.itemContainer}>
-                <Text style={styles.itemText}>{item.title}</Text>
-                <Text style={styles.itemDescription}>{item.detail}</Text>
+              <View>
+                <View style={[styles.itemContainer]}>
+                  <Image
+                    source={{ uri: item.uri.uri }}
+                    style={styles.imageContainer}
+                  />
+                  <TouchableOpacity
+                    onPress={() => Alert.alert("Da click")}
+                    style={{ marginLeft: 12, flex: 3 }}
+                  >
+                    <Text
+                      numberOfLines={5}
+                      ellipsizeMode="tail"
+                      style={styles.itemText}
+                    >
+                      {item.tieuDe}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 0.5,
+                    borderColor: "grey",
+                    marginTop: 10,
+                  }}
+                />
               </View>
             )}
             keyExtractor={(item) => item.id.toString()}
+            extraData={isLoading} // Đưa isLoading vào extraData
+            onRefresh={handleRefresh} // Xử lý refresh khi kéo xuống
+            refreshing={isLoading} // Thiết lập refreshing khi đang loading
           />
         );
       } else {
         return (
           <View style={styles.dataContainer}>
-            <Text style={styles.dataText}>Không có dữ liệu phù hợp</Text>
+            <Placeholder
+              Left={PlaceholderMedia}
+              Right={PlaceholderMedia}
+              Animation={Loader}
+            >
+              <PlaceholderLine width={80} />
+              <PlaceholderLine />
+              <PlaceholderLine width={30} />
+            </Placeholder>
           </View>
         );
       }
     } else {
       return (
-        <View style={styles.dataContainer}>
-          <Text style={styles.dataText}>Đang tải dữ liệu...</Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <Placeholder
+            Left={PlaceholderMedia}
+            Right={PlaceholderMedia}
+            Animation={Loader}
+          >
+            <PlaceholderLine width={80} />
+            <PlaceholderLine />
+            <PlaceholderLine width={30} />
+          </Placeholder>
         </View>
       );
     }
@@ -127,16 +179,7 @@ const HomeScreen = ({ navigation }) => {
       message = "Good evening 111";
     }
     setGreeting(message);
-  }
-  
-  
-  
-
-  useEffect(() => {
-    checkHouse();
-    setSelectedButton("Mới");
-    getDataFromAPI()
-  }, []);
+  };
 
   return (
     <View style={styles.container}>
@@ -168,7 +211,6 @@ const HomeScreen = ({ navigation }) => {
       <View style={{ flex: 1, marginTop: 5 }}>
         <ScrollView horizontal>
           {renderButton("Mới")}
-          {renderButton("Nổi bật")}
           {renderButton("Thời sự")}
           {renderButton("Thể thao")}
           {renderButton("Pháp luật")}
@@ -177,11 +219,7 @@ const HomeScreen = ({ navigation }) => {
         </ScrollView>
       </View>
 
-      <View style={{ flex: 9 }}>
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          {renderData()}
-        </View>
-      </View>
+      <View style={{ flex: 9, padding: 12 }}>{renderData()}</View>
     </View>
   );
 };
@@ -240,6 +278,26 @@ const styles = StyleSheet.create({
   },
   selectedButtonText: {
     color: "#225254",
+  },
+
+  itemContainer: {
+    flex: 1,
+    flexDirection: "row",
+    marginTop: 12,
+  },
+  itemText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+  },
+
+  imageContainer: {
+    backgroundColor: "white",
+    width: "100%",
+    height: 85,
+    borderRadius: 10,
+    flex: 1,
   },
 });
 

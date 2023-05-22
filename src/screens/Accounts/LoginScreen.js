@@ -11,9 +11,9 @@ const LoginScreen = ({ navigation }) => {
 
   const onLogin = () => {
     if(email == '1' && password == '1') {
-      navigation.navigate('TabbarAdmin')
+      navigation.replace('TabbarAdmin')
     } else {
-      navigation.navigate('TabbarUser')
+      navigation.replace('TabbarUser')
     }
   }
 

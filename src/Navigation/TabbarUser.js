@@ -9,16 +9,17 @@ const Tab = createBottomTabNavigator();
 const TabbarUser = () => {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: "blue",
-        inactiveTintColor: "gray",
+      screenOptions={{
+        tabBarActiveTintColor: "#225254",
+        tabBarInactiveTintColor: "gray",
+        // Các tùy chọn khác...
       }}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarLabel: "HomeTab",
+          tabBarLabel: "Home",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="home" color={color} size={size} />
