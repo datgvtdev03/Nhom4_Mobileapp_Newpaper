@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
   const getDataFromAPI = async () => {
     try {
       const response = await fetch(
-        "https://6399d10b16b0fdad774a46a6.mockapi.io/facebook"
+        "http://localhost:3000/posts"
       );
       const data = await response.json();
       setData(data);
@@ -88,13 +88,13 @@ const HomeScreen = ({ navigation }) => {
 
   const renderData = () => {
     if (data) {
-      // const filteredData = data.filter(
-      //   (item) => item.theLoai.name === selectedButton
-      // );
-
       const filteredData = data.filter(
-        (item) => item.theLoai && item.theLoai.name === selectedButton
+        (item) => item?.theLoai === selectedButton
       );
+
+      // const filteredData = data.filter(
+      //   (item) => item.theLoai && item.theLoai.name === selectedButton
+      // );
 
       if (filteredData.length > 0) {
         return (
@@ -104,7 +104,7 @@ const HomeScreen = ({ navigation }) => {
               <View>
                 <View style={[styles.itemContainer]}>
                   <Image
-                    source={{ uri: item.uri.uri }}
+                    source={{ uri: item.uri }}
                     style={styles.imageContainer}
                   />
                   <TouchableOpacity

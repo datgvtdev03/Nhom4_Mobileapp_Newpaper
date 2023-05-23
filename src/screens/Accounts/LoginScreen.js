@@ -10,11 +10,11 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const onLogin = () => {
-    if(email == '1' && password == '1') {
+    // if(email == '1' && password == '1') {
       navigation.replace('TabbarAdmin')
-    } else {
-      navigation.replace('TabbarUser')
-    }
+    // } else {
+    //   navigation.replace('TabbarUser')
+    // }
   }
 
 

@@ -21,7 +21,7 @@ import { BottomPopup } from "../../Shared/BottomPopup";
 import ModalPoup from "../../Shared/ModalSuccess";
 
 const AddOrEditNewsScreen = ({ navigation }) => {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
   const [location, setLocation] = useState(null);
   const [tieuDe, setTieuDe] = useState("");
   const [noiDung, setNoiDung] = useState("");
@@ -105,19 +105,20 @@ const AddOrEditNewsScreen = ({ navigation }) => {
   };
 
   const themBaiViet = async () => {
+    console.log("SKJHJH",image);
     try {
       const response = await fetch(
-        "https://6399d10b16b0fdad774a46a6.mockapi.io/facebook",
+        "http://localhost:3000/posts",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            uri: image,
+            uri: String(image.uri),
             tieuDe: tieuDe,
             noiDung: noiDung,
-            theLoai: selectedTheLoai,
+            theLoai: selectedTheLoai.name,
           }),
         }
       );
@@ -125,7 +126,6 @@ const AddOrEditNewsScreen = ({ navigation }) => {
       if (response.ok) {
         console.log("Product added successfully");
         openModal();
-
         setImage(null);
         setTieuDe("");
         setNoiDung("");
@@ -136,6 +136,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
     } catch (error) {
       console.error("Error adding product", error);
     }
+    // console.log(selectedTheLoai);
   };
 
   return (

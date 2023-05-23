@@ -1,51 +1,48 @@
-import React, {useState} from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, Alert} from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 
-const SignupScreen = ({navigation}) => {
+const SignupScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [permission, setPermission] = useState("user");
 
   const onRegister = () => {
     const data = {
       fullName: fullName,
       email: email,
-      password: password
+      password: password,
+      permission: permission
     };
 
-    fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar', {
+    fetch('http://localhost:3000/users', {
       method: 'POST',
       headers: {
-        'content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     })
-    .then(response => response.json())
-    .then(responseJson => {
-      Alert.alert("Dki thanh cong")
-    })
-    .catch(err => {
-      Alert.alert("Dki khong thanh cong")
-    })
-  }
-
-
-
-
+      .then(response => response.json())
+      .then(response => {
+        Alert.alert("Đăng ký thành công");
+        navigation.navigate("Login");
+      })
+      .catch(err => {
+        Alert.alert("Đăng ký không thành công");
+        console.log(err);
+      });
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-
-
   return (
     <View style={styles.container}>
-      <View style={{flex: 5, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 5, justifyContent: "center", alignItems: "center" }}>
         <Image
           source={require("../../../assets/logo1.png")}
           style={{ width: "50%", marginTop: 30 }}
@@ -53,7 +50,7 @@ const SignupScreen = ({navigation}) => {
       </View>
 
       <View style={styles.viewBottom}>
-        <Text style={{ fontWeight: "bold", fontSize: 24, color: '#225254'}}>ĐĂNG KÍ</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 24, color: '#225254' }}>ĐĂNG KÍ</Text>
         <View
           style={{
             borderWidth: 1,
@@ -64,7 +61,7 @@ const SignupScreen = ({navigation}) => {
         />
 
         <View style={styles.viewTextInput}>
-          <CustomTextInput placeholder="Họ và tên" value={fullName} onChangeText={setFullName}/>
+          <CustomTextInput placeholder="Họ và tên" value={fullName} onChangeText={setFullName} />
           <Image
             style={{ width: 20, height: 20 }}
             source={require("../../../assets/user1.png")}
@@ -72,7 +69,7 @@ const SignupScreen = ({navigation}) => {
         </View>
 
         <View style={styles.viewTextInput}>
-          <CustomTextInput placeholder="Email" value={email} onChangeText={setEmail}/>
+          <CustomTextInput placeholder="Email" value={email} onChangeText={setEmail} />
 
           <Image
             style={{ width: 20, height: 14 }}
@@ -99,13 +96,14 @@ const SignupScreen = ({navigation}) => {
             />
           </TouchableOpacity>
         </View>
-        <CustomButton title="ĐĂNG KÍ" onPress={onRegister}/>
+        <CustomButton title="ĐĂNG KÍ" onPress={onRegister} />
         <Text style={styles.textOr}>HOẶC</Text>
-        <CustomButton title="ĐĂNG NHẬP" style={styles.btnSignup} onPress={() => navigation.navigate('Login')}/>
+        <CustomButton title="ĐĂNG NHẬP" style={styles.btnSignup} onPress={() => navigation.navigate('Login')} />
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -142,4 +140,5 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
+
 export default SignupScreen;

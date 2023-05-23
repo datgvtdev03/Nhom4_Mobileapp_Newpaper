@@ -109,7 +109,7 @@ const ProfileScreen = () => {
           data={data}
           renderItem={({ item }) => (
             <View style={styles.container}>
-              <Image source={{ uri: item.uri.uri }} style={styles.image} />
+              <Image source={{ uri: item?.uri?.uri }} style={styles.image} />
               <Text style={styles.title}>{item.tieuDe}</Text>
               <Text style={styles.description}>{item.noiDung}</Text>
             </View>
