@@ -10,12 +10,40 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const onLogin = () => {
-    // if(email == '1' && password == '1') {
-      navigation.replace('TabbarAdmin')
-    // } else {
-    //   navigation.replace('TabbarUser')
-    // }
-  }
+    const data = {
+      email: email,
+      password: password,
+    };
+  
+    fetch('http://localhost:3000/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.length > 0) {
+          const user = response[0];
+          if (user.permission === 'admin') {
+            // Đăng nhập thành công với quyền admin
+            navigation.replace('TabbarAdmin');
+          } else {
+            // Đăng nhập thành công với quyền user
+            navigation.replace('TabbarUser');
+          }
+        } else {
+          // Đăng nhập không thành công
+          navigation.replace('Login');
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi kết nối:', error);
+        // Xử lý lỗi kết nối API
+      });
+  };
+  
 
 
 
