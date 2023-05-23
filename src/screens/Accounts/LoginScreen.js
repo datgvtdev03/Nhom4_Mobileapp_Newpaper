@@ -9,41 +9,63 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLogin = () => {
-    const data = {
-      email: email,
-      password: password,
-    };
-  
-    fetch('http://localhost:3000/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.length > 0) {
-          const user = response[0];
-          if (user.permission === 'admin') {
-            // Đăng nhập thành công với quyền admin
-            navigation.replace('TabbarAdmin');
-          } else {
-            // Đăng nhập thành công với quyền user
-            navigation.replace('TabbarUser');
-          }
-        } else {
-          // Đăng nhập không thành công
-          navigation.replace('Login');
-        }
-      })
-      .catch(error => {
-        console.error('Lỗi kết nối:', error);
-        // Xử lý lỗi kết nối API
-      });
+  const validateEmail = (email) => {
+    // Kiểm tra định dạng email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
   };
-  
+
+  const validatePassword = (password) => {
+    // Kiểm tra độ dài mật khẩu và không chứa ký tự đặc biệt
+    const passwordPattern = /^[a-zA-Z0-9]{6,12}$/;
+    return passwordPattern.test(password);
+  };
+
+  const onLogin = () => {
+    if (email.trim() === "" || password.trim() === "") {
+      // Kiểm tra các trường không được để trống
+      Alert.alert("Vui lòng điền đầy đủ thông tin.");
+    } else if (!validateEmail(email)) {
+      // Kiểm tra định dạng email
+      Alert.alert("Email không đúng định dạng.");
+    } else if (!validatePassword(password)) {
+      // Kiểm tra độ dài và ký tự đặc biệt trong mật khẩu
+      Alert.alert("Mật khẩu phải có độ dài từ 6 đến 12 ký tự và không chứa ký tự đặc biệt.");
+    } else {
+      const data = {
+        email: email,
+        password: password,
+      };
+    
+      fetch('http://localhost:3000/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response.length > 0) {
+            const user = response[0];
+            if (user.permission === 'admin') {
+              // Đăng nhập thành công với quyền admin
+              navigation.replace('TabbarAdmin');
+            } else {
+              // Đăng nhập thành công với quyền user
+              navigation.replace('TabbarUser');
+            }
+          } else {
+            // Đăng nhập không thành công
+            Alert.alert("Email hoặc mật khẩu không chính xác.");
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi kết nối:', error);
+          // Xử lý lỗi kết nối API
+        });
+    }
+  };
 
 
 

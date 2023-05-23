@@ -10,35 +10,61 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [permission, setPermission] = useState("user");
 
-  const onRegister = () => {
-    const data = {
-      fullName: fullName,
-      email: email,
-      password: password,
-      permission: permission
-    };
 
-    fetch('http://localhost:3000/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => response.json())
-      .then(response => {
-        Alert.alert("Đăng ký thành công");
-        navigation.navigate("Login");
+  const validateEmail = (email) => {
+    // Kiểm tra định dạng email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // Kiểm tra độ dài mật khẩu và không chứa ký tự đặc biệt
+    const passwordPattern = /^[a-zA-Z0-9]{6,12}$/;
+    return passwordPattern.test(password);
+  };
+
+
+  const onRegister = () => {
+    if (fullName.trim() === "" || email.trim() === "" || password.trim() === "") {
+      // Kiểm tra các trường không được để trống
+      Alert.alert("Vui lòng điền đầy đủ thông tin.");
+    } else if (!validateEmail(email)) {
+      // Kiểm tra định dạng email
+      Alert.alert("Email không đúng định dạng.");
+    } else if (!validatePassword(password)) {
+      // Kiểm tra độ dài và ký tự đặc biệt trong mật khẩu
+      Alert.alert("Mật khẩu phải có độ dài từ 6 đến 12 ký tự và không chứa ký tự đặc biệt.");
+    } else {
+      const data = {
+        fullName: fullName,
+        email: email,
+        password: password,
+        permission: permission
+      };
+
+      fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       })
-      .catch(err => {
-        Alert.alert("Đăng ký không thành công");
-        console.log(err);
-      });
+        .then(response => response.json())
+        .then(response => {
+          Alert.alert("Đăng ký thành công");
+          navigation.navigate("Login");
+        })
+        .catch(err => {
+          Alert.alert("Đăng ký không thành công");
+          console.log(err);
+        });
+    }
   };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
 
   return (
     <View style={styles.container}>

@@ -105,7 +105,11 @@ const AddOrEditNewsScreen = ({ navigation }) => {
   };
 
   const themBaiViet = async () => {
-    console.log("SKJHJH",image);
+    if (!image || !tieuDe || !noiDung || !selectedTheLoai) {
+      Alert.alert("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+  
     try {
       const response = await fetch(
         "http://localhost:3000/posts",
@@ -122,7 +126,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
           }),
         }
       );
-
+  
       if (response.ok) {
         console.log("Product added successfully");
         openModal();
@@ -136,7 +140,6 @@ const AddOrEditNewsScreen = ({ navigation }) => {
     } catch (error) {
       console.error("Error adding product", error);
     }
-    // console.log(selectedTheLoai);
   };
 
   return (
