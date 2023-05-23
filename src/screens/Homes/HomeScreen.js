@@ -22,11 +22,8 @@ import {
 } from "rn-placeholder";
 
 import SlideShow from "../../Shared/SlideShow";
-import UploadImageScreen from "../../Shared/UploadImageScreen";
-import CustomTextInput1 from "../../Shared/CustomTextInput1";
-import Header from "../../Shared/Header";
 import CustomTextInput from "../../Shared/CustomTextInput";
-
+import { API_URL_GET_POSTS } from "../../Config/config";
 
 const HomeScreen = ({ navigation }) => {
   const [greeting, setGreeting] = useState("");
@@ -47,11 +44,12 @@ const HomeScreen = ({ navigation }) => {
   const getDataFromAPI = async () => {
     try {
       const response = await fetch(
-        "https://6399d10b16b0fdad774a46a6.mockapi.io/facebook"
+        API_URL_GET_POSTS
       );
       const data = await response.json();
       setData(data);
       setIsLoading(false);
+      console.log("get: ", data);
     } catch (error) {
       console.log(error);
     }
@@ -88,12 +86,8 @@ const HomeScreen = ({ navigation }) => {
 
   const renderData = () => {
     if (data) {
-      // const filteredData = data.filter(
-      //   (item) => item.theLoai.name === selectedButton
-      // );
-
       const filteredData = data.filter(
-        (item) => item.theLoai && item.theLoai.name === selectedButton
+        (item) => item?.theLoai === selectedButton
       );
 
       if (filteredData.length > 0) {
@@ -104,19 +98,26 @@ const HomeScreen = ({ navigation }) => {
               <View>
                 <View style={[styles.itemContainer]}>
                   <Image
-                    source={{ uri: item.uri.uri }}
+                    source={{ uri: item?.uri }}
                     style={styles.imageContainer}
                   />
                   <TouchableOpacity
-                    onPress={() => Alert.alert("Da click")}
+                    onPress={() => navigation.navigate('DetailNews', {item: item})}
                     style={{ marginLeft: 12, flex: 3 }}
                   >
                     <Text
-                      numberOfLines={5}
+                      numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.itemText}
                     >
                       {item.tieuDe}
+                    </Text>
+                    <Text
+                      numberOfLines={3}
+                      ellipsizeMode="tail"
+                      style={{color: 'white', fontWeight: 'normal'}}
+                    >
+                      {item.noiDung}
                     </Text>
                   </TouchableOpacity>
                 </View>

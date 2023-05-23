@@ -50,7 +50,7 @@ const SlideShow = () => {
       >
         {images.map((image, index) => (
           <View key={index} style={styles.slide}>
-            <Image source={{ uri: image.uri.uri }} style={styles.image} />
+            <Image source={{ uri: image?.uri?.uri }} style={styles.image} />
           </View>
         ))}
       </ScrollView>

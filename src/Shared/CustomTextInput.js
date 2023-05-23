@@ -27,6 +27,7 @@ const CustomTextInput = ({
 const styles = StyleSheet.create({
   input: {
     width: "100%",
+    height: 44,
     // borderColor: '#225254',
     // borderWidth: 1,
     // padding: 10,

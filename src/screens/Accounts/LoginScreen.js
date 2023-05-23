@@ -1,22 +1,78 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
+import { API_URL_LOGIN } from "../../Config/config";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
+  
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLogin = () => {
-    if(email == '1' && password == '1') {
-      navigation.replace('TabbarAdmin')
-    } else {
-      navigation.replace('TabbarUser')
-    }
-  }
+  const [notiEmail, setNotiEmail] = useState("");
+  const [notiPassword, setNotiPassword] = useState("");
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 8 && password.length <= 12;
+  };
+
+  const onLogin = () => {
+    if(!validateEmail(email)) {
+      setNotiEmail("Email không hợp lệ");
+      return;
+    }
+    if(!validatePassword(password)) {
+      setNotiPassword("Mật khẩu không hợp lệ");
+      return;
+    }
+
+    const data = {
+      email: email,
+      password: password,
+    };
+  
+    fetch(API_URL_LOGIN, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.length > 0) {
+          const user = response[0];
+          if (user.permission === 'admin') {
+            // Đăng nhập thành công với quyền admin
+            navigation.replace('TabbarAdmin');
+          } else {
+            // Đăng nhập thành công với quyền user
+            navigation.replace('TabbarUser');
+          }
+        } else {
+          // Đăng nhập không thành công
+          Alert.alert("Email hoặc mật khẩu không chính xác.");
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi kết nối:', error);
+        // Xử lý lỗi kết nối API
+      });
+  }
 
 
 
@@ -34,25 +90,34 @@ const LoginScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.viewBottom}>
-        <Text style={{ fontWeight: "bold", fontSize: 24, color: "#225254" }}>
-          ĐĂNG NHẬP
-        </Text>
-        <View
-          style={{
-            borderWidth: 1,
-            width: "80%",
-            marginVertical: 10,
-            borderColor: "#225254",
-          }}
-        />
-
-        <View style={styles.viewTextInput}>
-          <CustomTextInput placeholder="Email" value={email} onChangeText={setEmail} />
-
-          <Image
-            style={{ width: 20, height: 14 }}
-            source={require("../../../assets/mail.png")}
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ fontWeight: "bold", fontSize: 24, color: "#225254" }}>
+            ĐĂNG NHẬP
+          </Text>
+          <View
+            style={{
+              borderWidth: 1,
+              width: "80%",
+              marginVertical: 10,
+              borderColor: "#225254",
+            }}
           />
+
+          <View style={styles.viewTextInput}>
+            <CustomTextInput
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+            />
+
+            <Image
+              style={{ width: 20, height: 14 }}
+              source={require("../../../assets/mail.png")}
+            />
+          </View>
+        </View>
+        <View style={{ alignItems: "flex-start", justifyContent: "flex-start" }}>
+          <Text style={styles.textNoti}>{notiEmail}</Text>
         </View>
 
         <View style={styles.viewTextInput}>
@@ -74,18 +139,29 @@ const LoginScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
+        <View
+          style={{ alignItems: "flex-start", justifyContent: "flex-start" }}
+        >
+          <Text style={styles.textNoti}>{notiPassword}</Text>
+        </View>
 
-        <CustomButton title="ĐĂNG NHẬP" onPress={onLogin}/>
+        <CustomButton title="ĐĂNG NHẬP" onPress={onLogin} />
 
-        <Text style={styles.textOr}>HOẶC</Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={styles.textOr}>HOẶC</Text>
+        </View>
+
         <CustomButton
           title="ĐĂNG KÍ"
           style={styles.btnSignup}
           onPress={() => navigation.navigate("Signup")}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Text style={{ textDecorationLine: "underline" }}>Bỏ qua</Text>
-        </TouchableOpacity>
+
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <Text style={{ textDecorationLine: "underline" }}>Bỏ qua</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -98,13 +174,11 @@ const styles = StyleSheet.create({
   },
 
   viewBottom: {
-    flex: 5.5,
-    flexDirection: "column",
+    flex: 7,
     backgroundColor: "white",
     borderTopRightRadius: 60,
     borderTopLeftRadius: 60,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 30,
   },
 
   textOr: {
@@ -120,10 +194,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
-    paddingVertical: 12,
-    width: "80%",
+    width: "100%",
     borderRadius: 8,
-    marginVertical: 10,
+    marginTop: 10,
+  },
+  textNoti: {
+    color: "red",
   },
 });
 export default LoginScreen;
