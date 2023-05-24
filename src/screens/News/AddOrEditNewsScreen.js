@@ -16,17 +16,18 @@ import CustomButton from "../../Shared/CustomButton";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { BottomPopup } from "../../Shared/BottomPopup";
-import ModalPoup from "../../Shared/ModalSuccess";
+import ModalPoup from "../../Shared/ModalPopup";
 
 import { API_URL_POST_POSTS } from "../../Config/config";
 const AddOrEditNewsScreen = ({ navigation }) => {
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [location, setLocation] = useState(null);
   const [tieuDe, setTieuDe] = useState("");
   const [noiDung, setNoiDung] = useState("");
   const [selectedTheLoai, setSelectedTheLoai] = useState(null);
 
-  const [visible, setVisible] = React.useState(false);
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   useEffect(() => {
     checkPermission();
@@ -92,75 +93,60 @@ const AddOrEditNewsScreen = ({ navigation }) => {
     { id: 3, name: "Thể thao" },
     { id: 4, name: "Pháp luật" },
     { id: 5, name: "Giáo dục" },
-    { id: 5, name: "Giáo dục" },
     { id: 6, name: "Kinh tế" },
   ];
 
-  const openModal = () => {
-    setVisible(true);
+  const openSuccessModal = () => {
+    setSuccessModalVisible(true);
   };
+
   const openModalFail = () => {
-    setVisible(true);
+    setErrorModalVisible(true);
   };
-  const closeModal = () => {
-    setVisible(false);
+
+  const closeSuccessModal = () => {
+    setSuccessModalVisible(false);
+  };
+
+  const closeErrorModal = () => {
+    setErrorModalVisible(false);
+  };
+
+  const onCancel = () => {
+    setImage(null);
+    setTieuDe("");
+    setNoiDung("");
+    setSelectedTheLoai(null);
+    navigation.navigate("Home")
   };
 
   const themBaiViet = async () => {
-<<<<<<< HEAD
     if (!image || !tieuDe || !noiDung || !selectedTheLoai) {
-      Alert.alert("Vui lòng điền đầy đủ thông tin.");
-      return;
-    }
-  
-    try {
-      const response = await fetch(
-        "http://localhost:3000/posts",
-=======
-
-    if (!image || !tieuDe || !noiDung || !selectedTheLoai) {
-      // Alert.alert(
-      //   "Lỗi",
-      //   "Vui lòng điền đầy đủ thông tin",
-      //   [
-      //     {
-      //       text: "OK",
-      //       style: "cancel",
-      //     },
-      //   ],
-      // );
       openModalFail();
       return;
     }
 
     try {
-      const response = await fetch(
-        API_URL_POST_POSTS,
->>>>>>> origin/datgvtph20617
-        {
-          method: "POST",
-          headers: {
-            // "Content-Type": "application/json",
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          
-          body: JSON.stringify({
-            uri: String(image.uri),
-            tieuDe: tieuDe,
-            noiDung: noiDung,
-<<<<<<< HEAD
-            theLoai: selectedTheLoai.name,
-=======
-            theLoai: selectedTheLoai?.name,
->>>>>>> origin/datgvtph20617
-          }),
-        }
-      );
-  
+      const response = await fetch(API_URL_POST_POSTS, {
+        method: "POST",
+        headers: {
+          // "Content-Type": "application/json",
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          uri: String(image.uri),
+          tieuDe: tieuDe,
+          noiDung: noiDung,
+          theLoai: selectedTheLoai?.name,
+        }),
+      });
+
       if (response.ok) {
         console.log("Product added successfully");
-        openModal();
+        openSuccessModal();
+
         setImage(null);
         setTieuDe("");
         setNoiDung("");
@@ -242,32 +228,34 @@ const AddOrEditNewsScreen = ({ navigation }) => {
 
       <View style={styles.viewButton}>
         <View
-          style={{ flex: 5, alignItems: "center", justifyContent: "center" }}
+          style={{ flex: 5, alignItems: "center", justifyContent: "center", padding: 12 }}
         >
           <CustomButton
             style={{
               backgroundColor: "white",
               color: "#225254",
               borderColor: "#225254",
+              borderRadius: 20
             }}
+            onPress={onCancel}
             title="Huỷ"
           />
         </View>
 
         <View
-          style={{ flex: 5, alignItems: "center", justifyContent: "center" }}
+          style={{ flex: 5, alignItems: "center", justifyContent: "center", padding: 12 }}
         >
           <CustomButton
             title="Lưu"
-            style={{ borderColor: "#ffffff" }}
+            style={{ borderColor: "#ffffff" , borderRadius: 20}}
             onPress={themBaiViet}
             disabled={!image || !tieuDe || !noiDung || !selectedTheLoai}
           />
-          
-          <ModalPoup visible={visible}>
-            <View style={{ alignItems: "center" }}>
+
+          <ModalPoup visible={successModalVisible}>
+            <View style={{ alignItems: "flex-end" }}>
               <View style={styles.header}>
-                <TouchableOpacity onPress={closeModal}>
+                <TouchableOpacity onPress={closeSuccessModal}>
                   <Image
                     source={require("../../../assets/x.png")}
                     style={{ height: 30, width: 30 }}
@@ -285,14 +273,14 @@ const AddOrEditNewsScreen = ({ navigation }) => {
             <Text
               style={{ marginVertical: 30, fontSize: 20, textAlign: "center" }}
             >
-              Thanh cong
+              Thêm thành công!
             </Text>
           </ModalPoup>
 
-          <ModalPoup visible={visible}>
-            <View style={{ alignItems: "center" }}>
+          <ModalPoup visible={errorModalVisible}>
+            <View style={{ alignItems: "flex-end" }}>
               <View style={styles.header}>
-                <TouchableOpacity onPress={closeModal}>
+                <TouchableOpacity onPress={closeErrorModal}>
                   <Image
                     source={require("../../../assets/x.png")}
                     style={{ height: 30, width: 30 }}
@@ -302,7 +290,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
             </View>
             <View style={{ alignItems: "center" }}>
               <Image
-                source={require("../../../assets/success.png")}
+                source={require("../../../assets/warning.png")}
                 style={{ height: 150, width: 150, marginVertical: 10 }}
               />
             </View>
@@ -310,10 +298,9 @@ const AddOrEditNewsScreen = ({ navigation }) => {
             <Text
               style={{ marginVertical: 30, fontSize: 20, textAlign: "center" }}
             >
-              Khong Thanh cong
+              Nhập đủ các trường!
             </Text>
           </ModalPoup>
-
         </View>
       </View>
     </View>

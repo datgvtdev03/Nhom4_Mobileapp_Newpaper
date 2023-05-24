@@ -1,7 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "react-native-vector-icons";
-import ProfileScreen from "../screens/Profiles/Profilescreen";
+import ProfileScreenAdmin from "../screens/Profiles/ProfileAdminScreen";
 import AddOrEditNewsScreen from "../screens/News/AddOrEditNewsScreen";
 
 import HomeScreen from "../screens/Homes/HomeScreen";
@@ -46,7 +46,7 @@ const TabbarAdmin = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileScreenAdmin}
         options={{
           headerShown: false,
           tabBarLabel: "Profile",

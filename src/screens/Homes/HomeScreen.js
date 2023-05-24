@@ -38,17 +38,10 @@ const HomeScreen = ({ navigation }) => {
     setSelectedButton("Mới");
   }, []);
 
-
-  
-
   const getDataFromAPI = async () => {
     try {
       const response = await fetch(
-<<<<<<< HEAD
-        "http://localhost:3000/posts"
-=======
         API_URL_GET_POSTS
->>>>>>> origin/datgvtph20617
       );
       const data = await response.json();
       setData(data);
@@ -61,6 +54,7 @@ const HomeScreen = ({ navigation }) => {
 
   const handleButtonPress = (button) => {
     setSelectedButton(button);
+    getDataFromAPI();
   };
 
   const renderButton = (button) => (
@@ -106,11 +100,7 @@ const HomeScreen = ({ navigation }) => {
               <View>
                 <View style={[styles.itemContainer]}>
                   <Image
-<<<<<<< HEAD
-                    source={{ uri: item.uri }}
-=======
                     source={{ uri: item?.uri }}
->>>>>>> origin/datgvtph20617
                     style={styles.imageContainer}
                   />
                   <TouchableOpacity
@@ -189,7 +179,7 @@ const HomeScreen = ({ navigation }) => {
     } else if (currentHour >= 12 && currentHour < 18) {
       message = "Good afternoon";
     } else {
-      message = "Good evening 111";
+      message = "Good evening";
     }
     setGreeting(message);
   };
