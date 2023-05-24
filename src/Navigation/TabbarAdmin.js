@@ -29,6 +29,10 @@ const TabbarAdmin = () => {
           ),
         }}
       />
+
+      
+      {/* dung toan tu 3 ngoi*/}
+      
       <Tab.Screen
         name="ADD"
         component={AddOrEditNewsScreen}

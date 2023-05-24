@@ -22,11 +22,8 @@ import {
 } from "rn-placeholder";
 
 import SlideShow from "../../Shared/SlideShow";
-import UploadImageScreen from "../../Shared/UploadImageScreen";
-import CustomTextInput1 from "../../Shared/CustomTextInput1";
-import Header from "../../Shared/Header";
 import CustomTextInput from "../../Shared/CustomTextInput";
-
+import { API_URL_GET_POSTS } from "../../Config/config";
 
 const HomeScreen = ({ navigation }) => {
   const [greeting, setGreeting] = useState("");
@@ -47,11 +44,16 @@ const HomeScreen = ({ navigation }) => {
   const getDataFromAPI = async () => {
     try {
       const response = await fetch(
+<<<<<<< HEAD
         "http://localhost:3000/posts"
+=======
+        API_URL_GET_POSTS
+>>>>>>> origin/datgvtph20617
       );
       const data = await response.json();
       setData(data);
       setIsLoading(false);
+      console.log("get: ", data);
     } catch (error) {
       console.log(error);
     }
@@ -104,19 +106,30 @@ const HomeScreen = ({ navigation }) => {
               <View>
                 <View style={[styles.itemContainer]}>
                   <Image
+<<<<<<< HEAD
                     source={{ uri: item.uri }}
+=======
+                    source={{ uri: item?.uri }}
+>>>>>>> origin/datgvtph20617
                     style={styles.imageContainer}
                   />
                   <TouchableOpacity
-                    onPress={() => Alert.alert("Da click")}
+                    onPress={() => navigation.navigate('DetailNews', {item: item})}
                     style={{ marginLeft: 12, flex: 3 }}
                   >
                     <Text
-                      numberOfLines={5}
+                      numberOfLines={2}
                       ellipsizeMode="tail"
                       style={styles.itemText}
                     >
                       {item.tieuDe}
+                    </Text>
+                    <Text
+                      numberOfLines={3}
+                      ellipsizeMode="tail"
+                      style={{color: 'white', fontWeight: 'normal'}}
+                    >
+                      {item.noiDung}
                     </Text>
                   </TouchableOpacity>
                 </View>

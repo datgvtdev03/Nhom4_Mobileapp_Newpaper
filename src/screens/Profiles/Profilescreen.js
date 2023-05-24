@@ -46,7 +46,7 @@ const ProfileScreen = () => {
       const data = await response.json();
       setData(data);
       setIsLoading(false);
-      console.log("data: " + JSON.stringify(data));
+      // console.log("data: " + JSON.stringify(data));
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +79,8 @@ const ProfileScreen = () => {
           <Text>Click</Text>
         </TouchableOpacity>
         <ModalPoup visible={visible}>
-          <View style={{ alignItems: "center" }}>
+
+          <View style={{ alignItems: 'flex-end' }}>
             <View style={styles.header}>
               <TouchableOpacity onPress={closeModal}>
                 <Image
@@ -89,6 +90,7 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
+
           <View style={{ alignItems: "center" }}>
             <Image
               source={require("../../../assets/success.png")}

@@ -15,11 +15,10 @@ import CustomTextInput1 from "../../Shared/CustomTextInput1";
 import CustomButton from "../../Shared/CustomButton";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-
 import { BottomPopup } from "../../Shared/BottomPopup";
-
 import ModalPoup from "../../Shared/ModalSuccess";
 
+import { API_URL_POST_POSTS } from "../../Config/config";
 const AddOrEditNewsScreen = ({ navigation }) => {
   const [image, setImage] = useState("");
   const [location, setLocation] = useState(null);
@@ -100,11 +99,15 @@ const AddOrEditNewsScreen = ({ navigation }) => {
   const openModal = () => {
     setVisible(true);
   };
+  const openModalFail = () => {
+    setVisible(true);
+  };
   const closeModal = () => {
     setVisible(false);
   };
 
   const themBaiViet = async () => {
+<<<<<<< HEAD
     if (!image || !tieuDe || !noiDung || !selectedTheLoai) {
       Alert.alert("Vui lòng điền đầy đủ thông tin.");
       return;
@@ -113,16 +116,44 @@ const AddOrEditNewsScreen = ({ navigation }) => {
     try {
       const response = await fetch(
         "http://localhost:3000/posts",
+=======
+
+    if (!image || !tieuDe || !noiDung || !selectedTheLoai) {
+      // Alert.alert(
+      //   "Lỗi",
+      //   "Vui lòng điền đầy đủ thông tin",
+      //   [
+      //     {
+      //       text: "OK",
+      //       style: "cancel",
+      //     },
+      //   ],
+      // );
+      openModalFail();
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        API_URL_POST_POSTS,
+>>>>>>> origin/datgvtph20617
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            // "Content-Type": "application/json",
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
           },
+          
           body: JSON.stringify({
             uri: String(image.uri),
             tieuDe: tieuDe,
             noiDung: noiDung,
+<<<<<<< HEAD
             theLoai: selectedTheLoai.name,
+=======
+            theLoai: selectedTheLoai?.name,
+>>>>>>> origin/datgvtph20617
           }),
         }
       );
@@ -232,6 +263,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
             onPress={themBaiViet}
             disabled={!image || !tieuDe || !noiDung || !selectedTheLoai}
           />
+          
           <ModalPoup visible={visible}>
             <View style={{ alignItems: "center" }}>
               <View style={styles.header}>
@@ -256,6 +288,32 @@ const AddOrEditNewsScreen = ({ navigation }) => {
               Thanh cong
             </Text>
           </ModalPoup>
+
+          <ModalPoup visible={visible}>
+            <View style={{ alignItems: "center" }}>
+              <View style={styles.header}>
+                <TouchableOpacity onPress={closeModal}>
+                  <Image
+                    source={require("../../../assets/x.png")}
+                    style={{ height: 30, width: 30 }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Image
+                source={require("../../../assets/success.png")}
+                style={{ height: 150, width: 150, marginVertical: 10 }}
+              />
+            </View>
+
+            <Text
+              style={{ marginVertical: 30, fontSize: 20, textAlign: "center" }}
+            >
+              Khong Thanh cong
+            </Text>
+          </ModalPoup>
+
         </View>
       </View>
     </View>

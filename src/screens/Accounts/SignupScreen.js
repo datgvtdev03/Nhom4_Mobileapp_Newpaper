@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
+import { API_URL_SIGNUP } from "../../Config/config";
 
 const SignupScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -92,6 +93,21 @@ const SignupScreen = ({ navigation }) => {
             style={{ width: 20, height: 20 }}
             source={require("../../../assets/user1.png")}
           />
+
+          <View style={styles.viewTextInput}>
+            <CustomTextInput
+              placeholder="Họ và tên"
+              value={fullName}
+              onChangeText={setFullName}
+            />
+            <Image
+              style={{ width: 20, height: 20 }}
+              source={require("../../../assets/user1.png")}
+            />
+          </View>
+        </View>
+        <View style={{ alignItems: "flex-start", justifyContent: "flex-start" }}>
+          <Text style={styles.textNoti}>{notifullName}</Text>
         </View>
 
         <View style={styles.viewTextInput}>
@@ -101,6 +117,11 @@ const SignupScreen = ({ navigation }) => {
             style={{ width: 20, height: 14 }}
             source={require("../../../assets/mail.png")}
           />
+        </View>
+        <View
+          style={{ alignItems: "flex-start", justifyContent: "flex-start" }}
+        >
+          <Text style={styles.textNoti}>{notiEmail}</Text>
         </View>
 
         <View style={styles.viewTextInput}>
@@ -138,13 +159,11 @@ const styles = StyleSheet.create({
   },
 
   viewBottom: {
-    flex: 6.5,
-    flexDirection: "column",
+    flex: 7,
     backgroundColor: "white",
     borderTopRightRadius: 60,
     borderTopLeftRadius: 60,
-    alignItems: "center",
-    justifyContent: 'center',
+    padding: 30,
   },
 
   textOr: {
@@ -160,10 +179,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
-    paddingVertical: 12,
-    width: "80%",
+    width: "100%",
     borderRadius: 8,
-    marginVertical: 10,
+    marginTop: 10,
+  },
+  textNoti: {
+    color: 'red'
   },
 });
 
