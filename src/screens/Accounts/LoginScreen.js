@@ -10,9 +10,10 @@ import {
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 import { API_URL_LOGIN } from "../../Config/config";
+import ModalPopup from "../../Shared/ModalPopup";
+import useStore from "../../Config/store";
 
-const LoginScreen = ({navigation}) => {
-  
+const LoginScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -20,6 +21,18 @@ const LoginScreen = ({navigation}) => {
 
   const [notiEmail, setNotiEmail] = useState("");
   const [notiPassword, setNotiPassword] = useState("");
+
+  const [alertModal, setAlertModal] = useState(false);
+
+  const store = useStore();
+
+  const openModal = () => {
+    setAlertModal(true);
+  };
+
+  const closeModal = () => {
+    setAlertModal(false);
+  };
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,50 +44,59 @@ const LoginScreen = ({navigation}) => {
   };
 
   const onLogin = () => {
-    if(!validateEmail(email)) {
+    let isValid = true;
+
+    if (!validateEmail(email)) {
       setNotiEmail("Email không hợp lệ");
-      return;
+      isValid = false;
+    } else {
+      setNotiEmail("");
     }
-    if(!validatePassword(password)) {
+
+    if (!validatePassword(password)) {
       setNotiPassword("Mật khẩu không hợp lệ");
-      return;
+      isValid = false;
+    } else {
+      setNotiPassword("");
     }
 
-    const data = {
-      email: email,
-      password: password,
-    };
-  
-    fetch(API_URL_LOGIN, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.length > 0) {
-          const user = response[0];
-          if (user.permission === 'admin') {
-            // Đăng nhập thành công với quyền admin
-            navigation.replace('TabbarAdmin');
-          } else {
-            // Đăng nhập thành công với quyền user
-            navigation.replace('TabbarUser');
-          }
-        } else {
-          // Đăng nhập không thành công
-          Alert.alert("Email hoặc mật khẩu không chính xác.");
-        }
+    if (isValid) {
+      const data = {
+        email: email,
+        password: password,
+      };
+
+      fetch(API_URL_LOGIN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       })
-      .catch(error => {
-        console.error('Lỗi kết nối:', error);
-        // Xử lý lỗi kết nối API
-      });
-  }
-
-
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.length > 0) {
+            const user = response[0];
+            if (user.permission === "admin") {
+              // Đăng nhập thành công với quyền admin
+              store.setUserInfo(user); // Lưu thông tin người dùng vào store
+              navigation.replace("TabbarAdmin");
+            } else {
+              // Đăng nhập thành công với quyền user
+              store.setUserInfo(user); // Lưu thông tin người dùng vào store
+              navigation.replace("TabbarUser");
+            }
+          } else {
+            // Đăng nhập không thành công
+            openModal();
+          }
+        })
+        .catch((error) => {
+          console.error("Lỗi kết nối:", error);
+          // Xử lý lỗi kết nối API
+        });
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -107,7 +129,7 @@ const LoginScreen = ({navigation}) => {
             <CustomTextInput
               placeholder="Email"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => setEmail(text)}
             />
 
             <Image
@@ -116,7 +138,9 @@ const LoginScreen = ({navigation}) => {
             />
           </View>
         </View>
-        <View style={{ alignItems: "flex-start", justifyContent: "flex-start" }}>
+        <View
+          style={{ alignItems: "flex-start", justifyContent: "flex-start" }}
+        >
           <Text style={styles.textNoti}>{notiEmail}</Text>
         </View>
 
@@ -146,6 +170,30 @@ const LoginScreen = ({navigation}) => {
         </View>
 
         <CustomButton title="ĐĂNG NHẬP" onPress={onLogin} />
+        <ModalPopup visible={alertModal}>
+          <View style={{ alignItems: "flex-end" }}>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={closeModal}>
+                <Image
+                  source={require("../../../assets/x.png")}
+                  style={{ height: 30, width: 30 }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Image
+              source={require("../../../assets/warning.png")}
+              style={{ height: 150, width: 150, marginVertical: 10 }}
+            />
+          </View>
+
+          <Text
+            style={{ marginVertical: 30, fontSize: 20, textAlign: "center" }}
+          >
+            Tài khoản hoặc mật khẩu không đúng!
+          </Text>
+        </ModalPopup>
 
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Text style={styles.textOr}>HOẶC</Text>

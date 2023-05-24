@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Image, ScrollView, Text, Dimensions, Animated } from "react-native";
+import { API_URL_GET_POSTS } from "../Config/config";
 
 const SlideShow = () => {
   const [images, setImages] = useState([]);
@@ -14,7 +15,7 @@ const SlideShow = () => {
 
   const getDataFromAPI = async () => {
     try {
-      const response = await fetch("https://6399d10b16b0fdad774a46a6.mockapi.io/facebook");
+      const response = await fetch(API_URL_GET_POSTS);
       const data = await response.json();
       setImages(data);
     } catch (error) {
@@ -50,7 +51,7 @@ const SlideShow = () => {
       >
         {images.map((image, index) => (
           <View key={index} style={styles.slide}>
-            <Image source={{ uri: image?.uri?.uri }} style={styles.image} />
+            <Image source={{ uri: image?.uri }} style={styles.image} />
           </View>
         ))}
       </ScrollView>

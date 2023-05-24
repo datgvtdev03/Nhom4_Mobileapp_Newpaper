@@ -38,9 +38,6 @@ const HomeScreen = ({ navigation }) => {
     setSelectedButton("Mới");
   }, []);
 
-
-  
-
   const getDataFromAPI = async () => {
     try {
       const response = await fetch(
@@ -177,7 +174,7 @@ const HomeScreen = ({ navigation }) => {
     } else if (currentHour >= 12 && currentHour < 18) {
       message = "Good afternoon";
     } else {
-      message = "Good evening 111";
+      message = "Good evening";
     }
     setGreeting(message);
   };

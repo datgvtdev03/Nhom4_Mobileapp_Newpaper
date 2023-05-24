@@ -8,119 +8,108 @@ import {
   Image,
 } from "react-native";
 
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Fade,
-  Loader,
-  Shine,
-  ShineOverlay,
-} from "rn-placeholder";
+import Header from "../../Shared/Header";
+import useStore from "../../Config/store";
+import ModalPoup from "../../Shared/ModalPopup";
+const ProfileScreen = ({ navigation }) => {
+  const userInfo = useStore((state) => state.userInfo);
+  const logout = useStore((state) => state.logout);
 
-import ModalPoup from "../../Shared/ModalSuccess";
-
-const ProfileScreen = () => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [visible, setVisible] = React.useState(false);
+  const [alertModal, setAlertModal] = useState(false);
 
   const openModal = () => {
-    setVisible(true);
+    setAlertModal(true);
   };
 
   const closeModal = () => {
-    setVisible(false);
+    setAlertModal(false);
   };
+ 
+  const handleLogout = () => {
 
-  useEffect(() => {
-    getDataFromAPI();
-  }, []);
-
-  const getDataFromAPI = async () => {
-    try {
-      const response = await fetch(
-        "https://6399d10b16b0fdad774a46a6.mockapi.io/facebook"
-      );
-      const data = await response.json();
-      setData(data);
-      setIsLoading(false);
-      // console.log("data: " + JSON.stringify(data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleRefresh = () => {
-    setIsLoading(true);
-    getDataFromAPI();
-  };
-
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <Placeholder
-          Left={PlaceholderMedia}
-          Right={PlaceholderMedia}
-          Animation={Loader}
-        >
-          <PlaceholderLine width={80} />
-          <PlaceholderLine />
-          <PlaceholderLine width={30} />
-        </Placeholder>
-      </View>
-    );
+    logout();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    })
   }
+
   return (
     <View style={styles.container}>
-      <View style={{ flex: 4, alignItems: "center", justifyContent: "center" }}>
-        <TouchableOpacity onPress={() => openModal()}>
-          <Text>Click</Text>
-        </TouchableOpacity>
-        <ModalPoup visible={visible}>
+      <Header title="Hồ sơ của tôi" onPress={() => navigation.goBack()} />
 
-          <View style={{ alignItems: 'flex-end' }}>
-            <View style={styles.header}>
-              <TouchableOpacity onPress={closeModal}>
-                <Image
-                  source={require("../../../assets/x.png")}
-                  style={{ height: 30, width: 30 }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+      <View style={{ flex: 4, justifyContent: "center", padding: 12 }}>
+        <View style={{ alignItems: "center" }}>
+          <Image source={require("../../../assets/profile.png")} />
+        </View>
+        <View
+          style={{ borderWidth: 0.3, marginTop: 12, borderColor: "#225254" }}
+        />
 
-          <View style={{ alignItems: "center" }}>
-            <Image
-              source={require("../../../assets/success.png")}
-              style={{ height: 150, width: 150, marginVertical: 10 }}
-            />
-          </View>
+        <View style={{ marginTop: 12 }}>
+          <Text style={{ fontWeight: "700", color: "#225254", fontSize: 16 }}>
+            Họ và tên: {userInfo.fullName}{" "}
+          </Text>
+          <View
+            style={{ borderWidth: 0.3, marginTop: 12, borderColor: "#225254" }}
+          />
 
           <Text
-            style={{ marginVertical: 30, fontSize: 20, textAlign: "center" }}
+            style={{
+              fontWeight: "700",
+              color: "#225254",
+              marginTop: 12,
+              fontSize: 16,
+            }}
           >
-            Thanh cong
+            Email: {userInfo.email}
           </Text>
-        </ModalPoup>
+          <View
+            style={{ borderWidth: 0.3, marginTop: 12, borderColor: "#225254" }}
+          />
+          <Text
+            style={{
+              fontWeight: "700",
+              color: "#225254",
+              marginTop: 12,
+              fontSize: 16,
+            }}
+          >
+            Quyền: {userInfo.permission}
+          </Text>
+        </View>
       </View>
 
-      <View style={{ flex: 5 }}>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <View style={styles.container}>
-              <Image source={{ uri: item?.uri?.uri }} style={styles.image} />
-              <Text style={styles.title}>{item.tieuDe}</Text>
-              <Text style={styles.description}>{item.noiDung}</Text>
-            </View>
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          extraData={isLoading} // Đưa isLoading vào extraData
-          onRefresh={handleRefresh} // Xử lý refresh khi kéo xuống
-          refreshing={isLoading} // Thiết lập refreshing khi đang loading */}
-        />
+      <View
+        style={{
+          borderWidth: 0.3,
+          marginHorizontal: 12,
+          marginTop: 12,
+          borderColor: "#225254",
+        }}
+      />
+
+      <View style={{ flex: 6, marginHorizontal: 12, marginTop: 12 }}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ChangePW')}>
+          <Text style={{color: '#ffffff'}}>Đổi mật khẩu</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={openModal}>
+          <Text style={{color: '#ffffff'}}>Đăng xuất</Text>
+        </TouchableOpacity>
+        
+        <ModalPoup visible={alertModal}>
+          <Text style={{ marginTop: 0, fontSize: 20, textAlign: "center" }}>
+            Bạn có chắc chắn muốn đăng xuất?
+          </Text>
+          <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', marginTop: 50}}>
+              <TouchableOpacity onPress={closeModal} style={{height: 44, flex: 5, alignItems: 'center'}}>
+                <Text style={{fontWeight: 'bold', fontSize: 20}}>Huỷ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleLogout} style={{height: 44, flex: 5, alignItems: 'center'}}>
+              <Text style={{fontWeight: 'bold', fontSize: 20}}>Ok</Text>
+              </TouchableOpacity>
+          </View>
+        </ModalPoup>
       </View>
     </View>
   );
@@ -129,13 +118,16 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     flexDirection: "column",
   },
-  image: {
-    width: 200,
-    height: 200,
+  button: {
+    backgroundColor: "#225254",
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    marginVertical: 12
   },
+  
 });
 export default ProfileScreen;

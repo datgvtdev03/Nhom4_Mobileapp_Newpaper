@@ -10,6 +10,7 @@ import {
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 import { API_URL_SIGNUP } from "../../Config/config";
+import ModalPoup from "../../Shared/ModalPopup";
 
 const SignupScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -50,40 +51,56 @@ const SignupScreen = ({ navigation }) => {
 
 
   const onRegister = () => {
+    let isValid = true;
+
     if(!validateFullName(fullName)) {
       setNotiFullName("Họ và tên không hợp lệ!");
-      return;
-    } else if(!validateEmail(email)) {
-      setNotiEmail("Email không hợp lệ!");
-      return;
-    } else if(!validatePassword(password)) {
-      setNotiPassword("Mật khẩu phải có từ 6 đến 12 kí tự!");
-      return;
+      isValid = false;
+    } else {
+      setNotiFullName("");
     }
 
-    const data = {
-      fullName: fullName,
-      email: email,
-      password: password,
-      permission: permission
-    };
+    if(!validateEmail(email)) {
+      setNotiEmail("Email không hợp lệ!");
+      isValid = false;
+    } else {
+      setNotiEmail("");
+    }
 
-    fetch(API_URL_SIGNUP, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => response.json())
-      .then(response => {
-        Alert.alert("Đăng ký thành công");
-        navigation.navigate("Login");
+    if(!validatePassword(password)) {
+      setNotiPassword("Mật khẩu phải có từ 6 đến 12 kí tự!");
+      isValid = false;
+    } else {
+      setNotiPassword("");
+    }
+
+    if(isValid) {
+      const data = {
+        fullName: fullName,
+        email: email,
+        password: password,
+        permission: permission
+      };
+  
+      fetch(API_URL_SIGNUP, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       })
-      .catch(err => {
-        Alert.alert("Đăng ký không thành công");
-        console.log(err);
-      });
+        .then(response => response.json())
+        .then(response => {
+          Alert.alert("Đăng ký thành công!");
+          navigation.navigate("Login");
+        })
+        .catch(err => {
+          Alert.alert("Đăng ký không thành công");
+          console.log(err);
+        });
+    }
+
+    
   
   };
 
