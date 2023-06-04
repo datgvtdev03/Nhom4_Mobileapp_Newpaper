@@ -33,7 +33,7 @@ const ChangePasswordScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <Header
         title="Đổi mật khẩu"
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.goBack()}
       />
 
       <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>

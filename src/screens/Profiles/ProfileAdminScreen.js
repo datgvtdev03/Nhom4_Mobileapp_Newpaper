@@ -85,16 +85,19 @@ const ProfileScreenAdmin = ({ navigation }) => {
           borderWidth: 0.3,
           marginHorizontal: 12,
           borderColor: "#225254",
+          marginTop: 12,
         }}
       />
 
       <View style={{ flex: 6, marginHorizontal: 12, marginTop: 12 }}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ManagerNews')}>
           <Text style={{color: '#ffffff'}}>Danh sách bài viết</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ChangePW")}>
           <Text style={{color: '#ffffff'}}>Đổi mật khẩu</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.button} onPress={openModal}>
           <Text style={{color: '#ffffff'}}>Đăng xuất</Text>
         </TouchableOpacity>

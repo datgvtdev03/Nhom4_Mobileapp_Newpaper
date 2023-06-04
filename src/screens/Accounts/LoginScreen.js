@@ -40,7 +40,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const validatePassword = (password) => {
-    return password.length >= 8 && password.length <= 12;
+    return password.length >= 6 && password.length <= 12;
   };
 
   const onLogin = () => {

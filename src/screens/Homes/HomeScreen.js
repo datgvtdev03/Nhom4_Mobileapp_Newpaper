@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
       const data = await response.json();
       setData(data);
       setIsLoading(false);
-      console.log("get: ", data);
+      // console.log("get: ", data);
     } catch (error) {
       console.log(error);
     }
@@ -54,6 +54,7 @@ const HomeScreen = ({ navigation }) => {
 
   const handleButtonPress = (button) => {
     setSelectedButton(button);
+    getDataFromAPI();
   };
 
   const renderButton = (button) => (
@@ -82,6 +83,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const renderData = () => {
+    // getDataFromAPI();
     if (data) {
       const filteredData = data.filter(
         (item) => item?.theLoai === selectedButton

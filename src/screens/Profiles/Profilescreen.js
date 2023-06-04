@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
+import { StackActions, NavigationActions } from "@react-navigation/native";
 
 import Header from "../../Shared/Header";
 import useStore from "../../Config/store";
@@ -27,11 +28,12 @@ const ProfileScreen = ({ navigation }) => {
  
   const handleLogout = () => {
 
-    logout();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Login" }],
-    })
+    // logout();
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: "Login" }],
+    // })
+    navigation.navigate("Login")
   }
 
   return (
@@ -48,7 +50,7 @@ const ProfileScreen = ({ navigation }) => {
 
         <View style={{ marginTop: 12 }}>
           <Text style={{ fontWeight: "700", color: "#225254", fontSize: 16 }}>
-            Họ và tên: {userInfo.fullName}{" "}
+            Họ và tên: {userInfo?.fullName}{" "}
           </Text>
           <View
             style={{ borderWidth: 0.3, marginTop: 12, borderColor: "#225254" }}
@@ -62,7 +64,7 @@ const ProfileScreen = ({ navigation }) => {
               fontSize: 16,
             }}
           >
-            Email: {userInfo.email}
+            Email: {userInfo?.email}
           </Text>
           <View
             style={{ borderWidth: 0.3, marginTop: 12, borderColor: "#225254" }}
@@ -75,7 +77,7 @@ const ProfileScreen = ({ navigation }) => {
               fontSize: 16,
             }}
           >
-            Quyền: {userInfo.permission}
+            Quyền: {userInfo?.permission}
           </Text>
         </View>
       </View>

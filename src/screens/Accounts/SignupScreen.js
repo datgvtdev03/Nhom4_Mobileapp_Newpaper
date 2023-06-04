@@ -44,6 +44,10 @@ const SignupScreen = ({ navigation }) => {
     return passwordPattern.test(password);
   };
 
+  // const validatePassword = (password) => {
+  //   return password.length >= 8 && password.length <= 12;
+  // };
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
