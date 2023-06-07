@@ -9,4 +9,8 @@ export const API_URL_GET_POSTS = 'http://localhost:3000/posts';
 
 export const API_URL_POST_POSTS = 'http://localhost:3000/posts';
 
+export const API_URL_POST_DELETE = 'http://localhost:3000/posts/';
+
+export const API_URL_USER_CHANGEPASSWORD = 'http://localhost:3000/users/changePassword/';
+
 

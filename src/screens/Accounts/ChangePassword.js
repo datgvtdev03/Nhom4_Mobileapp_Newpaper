@@ -7,143 +7,138 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
-import CustomTextInput1 from "../../Shared/CustomTextInput";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 import Header from "../../Shared/Header";
-import ModalPoup from "../../Shared/ModalPopup";
+import { API_URL_USER_CHANGEPASSWORD } from "../../Config/config";
 
-const ChangePasswordScreen = ({ navigation }) => {
-  const [newPasswordVisible, setNewPasswordVisible] = useState(false);
-  const [enterNewPasswordVisible, setEnterNewPasswordVisible] = useState(false);
+const ChangePasswordScreen = ({ navigation, route }) => {
 
-  const [oldPassword, setOldPassword] = useState("")
+  const { account } = route.params;
+
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [enterNewPassword, setEnterNewPassword] = ("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-  const toggleNewPasswordVisibility = () => {
-    setNewPasswordVisible(!newPasswordVisible);
-  };
-  const toggleEnterNewPasswordVisibility = () => {
-    setEnterNewPasswordVisible(!enterNewPasswordVisible);
+  const handleChangePassword = (idAccount) => {
+
+
+    if(oldPassword == "" || newPassword == "" || confirmNewPassword == ""){
+      Alert.alert("Lỗi", "Nhập đủ các trường dữ liệu.");
+      return;
+    }
+
+
+    if(oldPassword != account.password){
+      Alert.alert("Lỗi", "Mật khẩu cũ không chính xác.");
+      return;
+    }
+
+
+    // Kiểm tra mật khẩu mới và mật khẩu xác nhận phải trùng nhau
+    if (newPassword !== confirmNewPassword) {
+      Alert.alert("Lỗi", "Mật khẩu mới và mật khẩu xác nhận không khớp.");
+      return;
+    }
+
+
+    // Gọi API để thay đổi mật khẩu
+    fetch(API_URL_USER_CHANGEPASSWORD + idAccount, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password: newPassword,
+      }),
+    })
+      .then((response) => response)
+      .then((data) => {
+        // Xử lý kết quả từ API
+        console.log(data.success);
+
+        if (data.success) {
+          // Thay đổi mật khẩu thành công
+          Alert.alert("Thông báo", "Đổi mật khẩu thành công.");
+          // Điều hướng người dùng về màn hình trước đó
+          navigation.goBack();
+        } else {
+          // Thay đổi mật khẩu thất bại
+          Alert.alert("Lỗi", "Đổi mật khẩu không thành công.");
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi:", error);
+        Alert.alert("Lỗi", "Đã xảy ra lỗi khi kết nối đến máy chủ.");
+      });
   };
 
   return (
     <View style={{ flex: 1 }}>
-      <Header
-        title="Đổi mật khẩu"
-        onPress={() => navigation.navigate("Home")}
-      />
+      <Header title="Đổi mật khẩu" onPress={() => navigation.goBack()} />
 
       <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
         <View style={styles.viewAddOrEdit}>
           <ScrollView>
             <Text style={{ marginTop: 12 }}>Mật khẩu cũ</Text>
-            <CustomTextInput1
-              style={{borderColor: "#225254",
-              borderWidth: 1, borderRadius: 8, paddingHorizontal: 10,marginTop: 3}}
+            <CustomTextInput
+              style={styles.textInput}
               placeholder="Mật khẩu cũ"
+              secureTextEntry
               value={oldPassword}
               onChangeText={setOldPassword}
             />
 
             <Text style={{ marginTop: 12 }}>Mật khẩu mới</Text>
-            <View style={styles.viewTextInput}>
-              <CustomTextInput
-                placeholder="Mật khẩu mới"
-                secureTextEntry={!newPasswordVisible}
-                value={newPassword}
-                onChangeText={setNewPassword}
-              />
+            <CustomTextInput
+              style={styles.textInput}
+              placeholder="Mật khẩu mới"
+              secureTextEntry
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
 
-              <TouchableOpacity onPress={toggleNewPasswordVisibility}>
-                <Image
-                  style={{ width: 20, height: 14 }}
-                  source={
-                    newPasswordVisible
-                      ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
-                      : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
-                  }
-                />
-              </TouchableOpacity>
-            </View>
-            
             <Text style={{ marginTop: 12 }}>Nhập lại mật khẩu mới</Text>
-            <View style={styles.viewTextInput}>
-              <CustomTextInput
-                placeholder="Nhập lại mật khẩu mới"
-                secureTextEntry={!enterNewPasswordVisible}
-                value={enterNewPassword}
-                onChangeText={setEnterNewPassword}
-              />
-
-              <TouchableOpacity onPress={toggleEnterNewPasswordVisibility}>
-                <Image
-                  style={{ width: 20, height: 14 }}
-                  source={
-                    enterNewPasswordVisible
-                      ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
-                      : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
-                  }
-                />
-              </TouchableOpacity>
-            </View>
+            <CustomTextInput
+              style={styles.textInput}
+              placeholder="Nhập lại mật khẩu mới"
+              secureTextEntry
+              value={confirmNewPassword}
+              onChangeText={setConfirmNewPassword}
+            />
           </ScrollView>
         </View>
       </View>
 
       <View style={styles.viewButton}>
-        <View
-          style={{
-            flex: 5,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 12,
-          }}
-        >
+        <View style={styles.buttonContainer}>
           <CustomButton
-            style={{
-              backgroundColor: "white",
-              color: "#225254",
-              borderColor: "#225254",
-              borderRadius: 20,
-            }}
-            onPress={() => {}}
+            style={styles.cancelButton}
+            onPress={() => navigation.goBack()}
             title="Huỷ"
           />
         </View>
 
-        <View
-          style={{
-            flex: 5,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 12,
-          }}
-        >
+        <View style={styles.buttonContainer}>
           <CustomButton
             title="Lưu"
-            style={{ borderColor: "#ffffff", borderRadius: 20 }}
-            onPress={() => {}}
+            onPress={() => handleChangePassword(account.id)}
           />
         </View>
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-  },
   viewAddOrEdit: {
     backgroundColor: "#ffffff",
     borderRadius: 16,
     margin: 12,
     padding: 16,
     width: "90%",
-
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -151,40 +146,34 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
-
     elevation: 6,
+  },
+  textInput: {
+    borderColor: "#225254",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginTop: 3,
   },
   viewButton: {
     flex: 1,
     flexDirection: "row",
-  },
-  textSize: {
-    fontSize: 16,
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "#225254",
-    borderRadius: 8,
-    padding: 11,
-    backgroundColor: "white",
-    marginTop: 5,
-    color: "grey",
-  },
-  image: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-    borderRadius: 100,
-  },
-  viewTextInput: {
-    flexDirection: "row",
-    borderColor: "#225254",
-    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
-    width: "100%",
-    borderRadius: 8,
-    marginTop: 3
+    padding: 12,
+  },
+  buttonContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  cancelButton: {
+    backgroundColor: "white",
+    color: "#225254",
+    borderColor: "#225254",
+    borderRadius: 20,
   },
 });
+
 export default ChangePasswordScreen;

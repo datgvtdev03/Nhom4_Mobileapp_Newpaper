@@ -10,6 +10,8 @@ import TabbarAdmin from "./TabbarAdmin";
 import TabbarUser from './TabbarUser';
 import HomeScreen from "../screens/Homes/HomeScreen";
 import DetailNewsScreen from "../screens/News/DetailNewsScreen";
+import ManagerNewsScreen from "../screens/News/ManagerNewsScreen";
+import SearchNewsScreen from "../Search/SearchNewsScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -24,6 +26,8 @@ const ManagerScreen = () => {
         <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown: false}}/>
         <Stack.Screen name="ChangePW" component={ChangePasswordScreen} options={{headerShown: false}}/>
         <Stack.Screen name="DetailNews" component={DetailNewsScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="Search" component={SearchNewsScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="ManagerNews" component={ManagerNewsScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
         <Stack.Screen name="TabbarAdmin" component={TabbarAdmin} options={{ headerShown: false }}/>
         <Stack.Screen name="TabbarUser" component={TabbarUser} options={{ headerShown: false }}/>

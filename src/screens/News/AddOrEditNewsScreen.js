@@ -19,12 +19,20 @@ import { BottomPopup } from "../../Shared/BottomPopup";
 import ModalPoup from "../../Shared/ModalPopup";
 
 import { API_URL_POST_POSTS } from "../../Config/config";
-const AddOrEditNewsScreen = ({ navigation }) => {
-  const [image, setImage] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [tieuDe, setTieuDe] = useState("");
-  const [noiDung, setNoiDung] = useState("");
-  const [selectedTheLoai, setSelectedTheLoai] = useState(null);
+const AddOrEditNewsScreen = ({ navigation, route}) => {
+  const { isEditMode, newsItem } = route?.params;
+
+  // const { user } = route.params;
+
+  const [image, setImage] = useState(isEditMode ? newsItem.uri : null);
+  const [location, setLocation] = useState(
+    isEditMode ? newsItem.location : null
+  );
+  const [tieuDe, setTieuDe] = useState(isEditMode ? newsItem.tieuDe : "");
+  const [noiDung, setNoiDung] = useState(isEditMode ? newsItem.noiDung : "");
+  const [selectedTheLoai, setSelectedTheLoai] = useState(
+    isEditMode ? newsItem.theLoai : null
+  );
 
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
@@ -32,6 +40,21 @@ const AddOrEditNewsScreen = ({ navigation }) => {
   useEffect(() => {
     checkPermission();
   }, []);
+
+  useEffect(() => {
+    if (!newsItem) {
+      console.log("Missing news item data");
+      return;
+    }
+    console.log("newsItem: ",newsItem);
+    console.log("dataa nhan: ",newsItem.theLoai);
+  
+    setImage(newsItem.uri);
+    setLocation(newsItem.location);
+    setTieuDe(newsItem.tieuDe);
+    setNoiDung(newsItem.noiDung);
+    setSelectedTheLoai(newsItem.selectedTheLoai);
+  }, [newsItem]);
 
   const checkPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -66,8 +89,8 @@ const AddOrEditNewsScreen = ({ navigation }) => {
     const result = await ImagePicker.launchImageLibraryAsync();
     if (!result.canceled) {
       const selectedImage = {
-        uri: result.assets[0].uri, // Truy cập vào thuộc tính uri thông qua mảng assets
-        type: "image/jpeg",
+        uri: result.assets[0].uri,
+        type: result.assets[0].type,
         name: "image.jpg",
       };
       setImage(selectedImage);
@@ -84,7 +107,6 @@ const AddOrEditNewsScreen = ({ navigation }) => {
   const handleValueChangeTheLoai = (value) => {
     setSelectedTheLoai(value);
     onClosePopupTheLoai(); //dong popup
-    console.log("value: ", value);
   };
 
   const dataTheLoai = [
@@ -117,7 +139,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
     setTieuDe("");
     setNoiDung("");
     setSelectedTheLoai(null);
-    navigation.navigate("Home")
+    navigation.navigate("Home");
   };
 
   const themBaiViet = async () => {
@@ -127,10 +149,12 @@ const AddOrEditNewsScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await fetch(API_URL_POST_POSTS, {
-        method: "POST",
+      const url = isEditMode ? `${API_URL_POST_POSTS}/${newsItem.id}` : API_URL_POST_POSTS;
+      const method =  isEditMode ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
-          // "Content-Type": "application/json",
           Accept: "application/json",
           "Content-Type": "application/json",
         },
@@ -144,7 +168,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
       });
 
       if (response.ok) {
-        console.log("Product added successfully");
+        console.log("Product added successfully: ", );
         openSuccessModal();
 
         setImage(null);
@@ -163,7 +187,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        title="Thêm bài viết"
+        title={isEditMode ? "Chỉnh sửa bài viết" : "Thêm bài viết"}
         onPress={() => navigation.navigate("Home")}
       />
 
@@ -173,7 +197,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
             <Text>Ảnh</Text>
             <View style={{ alignItems: "center", justifyContent: "center" }}>
               {image && (
-                <Image source={{ uri: image.uri }} style={styles.image} />
+                <Image source={{ uri: image }} style={styles.image} />
               )}
               <TouchableOpacity
                 onPress={selectImage}
@@ -213,7 +237,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
             <Text style={{ marginTop: 12 }}>Thể loại</Text>
             <TouchableWithoutFeedback onPress={onShowPopupTheLoai}>
               <Text style={styles.textSize}>
-                {selectedTheLoai ? selectedTheLoai.name : "-Chọn thể loại-"}
+                {selectedTheLoai ? selectedTheLoai : "-Chọn thể loại-"}
               </Text>
             </TouchableWithoutFeedback>
             <BottomPopup
@@ -229,14 +253,19 @@ const AddOrEditNewsScreen = ({ navigation }) => {
 
       <View style={styles.viewButton}>
         <View
-          style={{ flex: 5, alignItems: "center", justifyContent: "center", padding: 12 }}
+          style={{
+            flex: 5,
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 12,
+          }}
         >
           <CustomButton
             style={{
               backgroundColor: "white",
               color: "#225254",
               borderColor: "#225254",
-              borderRadius: 20
+              borderRadius: 20,
             }}
             onPress={onCancel}
             title="Huỷ"
@@ -244,11 +273,16 @@ const AddOrEditNewsScreen = ({ navigation }) => {
         </View>
 
         <View
-          style={{ flex: 5, alignItems: "center", justifyContent: "center", padding: 12 }}
+          style={{
+            flex: 5,
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 12,
+          }}
         >
           <CustomButton
             title="Lưu"
-            style={{ borderColor: "#ffffff" , borderRadius: 20}}
+            style={{ borderColor: "#ffffff", borderRadius: 20 }}
             onPress={themBaiViet}
             disabled={!image || !tieuDe || !noiDung || !selectedTheLoai}
           />
