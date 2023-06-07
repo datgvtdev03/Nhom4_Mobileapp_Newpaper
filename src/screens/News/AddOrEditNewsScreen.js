@@ -151,6 +151,7 @@ const AddOrEditNewsScreen = ({ navigation }) => {
         setTieuDe("");
         setNoiDung("");
         setSelectedTheLoai(null);
+        // navigation.navigate("Home")
       } else {
         console.error("Failed to add product");
       }
