@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Modal,
 } from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
@@ -15,34 +16,37 @@ import Header from "../../Shared/Header";
 import { API_URL_USER_CHANGEPASSWORD } from "../../Config/config";
 
 const ChangePasswordScreen = ({ navigation, route }) => {
-
   const { account } = route.params;
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [successVisible, setSuccessVisible] = useState(false);
+
+
   const handleChangePassword = (idAccount) => {
-
-
-    if(oldPassword == "" || newPassword == "" || confirmNewPassword == ""){
-      Alert.alert("Lỗi", "Nhập đủ các trường dữ liệu.");
+    if (oldPassword == "" || newPassword == "" || confirmNewPassword == "") {
+      setErrorVisible(true);
+      setErrorMessage("Không để rỗng các trường.");
       return;
     }
 
-
-    if(oldPassword != account.password){
-      Alert.alert("Lỗi", "Mật khẩu cũ không chính xác.");
+    if (oldPassword != account.password) {
+      setErrorVisible(true);
+      setErrorMessage("Mật khẩu cũ không chính xác.");
       return;
     }
-
 
     // Kiểm tra mật khẩu mới và mật khẩu xác nhận phải trùng nhau
     if (newPassword !== confirmNewPassword) {
-      Alert.alert("Lỗi", "Mật khẩu mới và mật khẩu xác nhận không khớp.");
+      setErrorVisible(true);
+      setErrorMessage("Mật khẩu mới và mật khẩu xác nhận không khớp.");
       return;
     }
-
 
     // Gọi API để thay đổi mật khẩu
     fetch(API_URL_USER_CHANGEPASSWORD + idAccount, {
@@ -57,23 +61,37 @@ const ChangePasswordScreen = ({ navigation, route }) => {
       .then((response) => response)
       .then((data) => {
         // Xử lý kết quả từ API
-        console.log(data.success);
 
-        if (data.success) {
+        if (data) {
           // Thay đổi mật khẩu thành công
-          Alert.alert("Thông báo", "Đổi mật khẩu thành công.");
+          // Alert.alert("Thông báo", "Đổi mật khẩu thành công.");
           // Điều hướng người dùng về màn hình trước đó
-          navigation.goBack();
+          aboutEmpty()
+
+          setSuccessVisible(true)
+          // navigation.goBack();
         } else {
           // Thay đổi mật khẩu thất bại
-          Alert.alert("Lỗi", "Đổi mật khẩu không thành công.");
+          setErrorVisible(true);
+          setErrorMessage("Đổi mật khẩu không thành công.");
         }
       })
       .catch((error) => {
-        console.error("Lỗi:", error);
         Alert.alert("Lỗi", "Đã xảy ra lỗi khi kết nối đến máy chủ.");
       });
   };
+
+  const closeSucces = () =>{
+    setSuccessVisible(false)
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });  }
+  const aboutEmpty = () => {
+    setOldPassword("")
+    setNewPassword("")
+    setConfirmNewPassword("")
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -128,6 +146,46 @@ const ChangePasswordScreen = ({ navigation, route }) => {
           />
         </View>
       </View>
+
+      <Modal visible={errorVisible} animationType="fade" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setErrorVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../../../assets/warning.png")}
+                style={styles.image}
+              />
+            </View>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        </View>
+      </Modal>
+      <Modal visible={successVisible} animationType="fade" transparent={true}>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => closeSucces()}
+      >
+        <Text style={styles.closeButtonText}>X</Text>
+      </TouchableOpacity>
+      <View style={styles.imageContainer}>
+        <Image
+          source={require("../../../assets/success.png")}
+          style={styles.image}
+        />
+      </View>
+      <Text style={styles.successText}>Vui lòng đăng nhập lại.</Text>
+    </View>
+  </View>
+</Modal>
+
     </View>
   );
 };
@@ -173,6 +231,40 @@ const styles = StyleSheet.create({
     color: "#225254",
     borderColor: "#225254",
     borderRadius: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+    width: "70%",
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 16,
+    // fontWeight: "bold",
+    marginBottom: 16,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+  },
+  closeButtonText: {
+    fontSize: 35,
+  },
+  imageContainer: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  image: {
+    width: 200,
+    height: 200,
   },
 });
 
