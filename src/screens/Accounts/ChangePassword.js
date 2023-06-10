@@ -27,6 +27,10 @@ const ChangePasswordScreen = ({ navigation, route }) => {
 
   const [successVisible, setSuccessVisible] = useState(false);
 
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [newPasswordVisible, setNewPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
 
   const handleChangePassword = (idAccount) => {
     if (oldPassword == "" || newPassword == "" || confirmNewPassword == "") {
@@ -63,15 +67,9 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         // Xử lý kết quả từ API
 
         if (data) {
-          // Thay đổi mật khẩu thành công
-          // Alert.alert("Thông báo", "Đổi mật khẩu thành công.");
-          // Điều hướng người dùng về màn hình trước đó
-          aboutEmpty()
-
-          setSuccessVisible(true)
-          // navigation.goBack();
+          // aboutEmpty()
+          setSuccessVisible(true);
         } else {
-          // Thay đổi mật khẩu thất bại
           setErrorVisible(true);
           setErrorMessage("Đổi mật khẩu không thành công.");
         }
@@ -81,18 +79,28 @@ const ChangePasswordScreen = ({ navigation, route }) => {
       });
   };
 
-  const closeSucces = () =>{
-    setSuccessVisible(false)
+  const closeSucces = () => {
+    setSuccessVisible(false);
     navigation.reset({
       index: 0,
       routes: [{ name: "Login" }],
-    });  }
+    });
+  };
   const aboutEmpty = () => {
-    setOldPassword("")
-    setNewPassword("")
-    setConfirmNewPassword("")
-  }
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+  };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+  const newTogglePasswordVisibility = () => {
+    setNewPasswordVisible(!newPasswordVisible);
+  };
+  const confirmTogglePasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
   return (
     <View style={{ flex: 1 }}>
       <Header title="Đổi mật khẩu" onPress={() => navigation.goBack()} />
@@ -101,31 +109,68 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         <View style={styles.viewAddOrEdit}>
           <ScrollView>
             <Text style={{ marginTop: 12 }}>Mật khẩu cũ</Text>
-            <CustomTextInput
-              style={styles.textInput}
-              placeholder="Mật khẩu cũ"
-              secureTextEntry
-              value={oldPassword}
-              onChangeText={setOldPassword}
-            />
+
+            <View style={styles.viewTextInput}>
+              <CustomTextInput
+                placeholder="Mật khẩu"
+                secureTextEntry={!passwordVisible}
+                value={oldPassword}
+                onChangeText={setOldPassword}
+              />
+
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <Image
+                  style={{ width: 20, height: 14 }}
+                  source={
+                    passwordVisible
+                      ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
+                      : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
+                  }
+                />
+              </TouchableOpacity>
+            </View>
 
             <Text style={{ marginTop: 12 }}>Mật khẩu mới</Text>
-            <CustomTextInput
-              style={styles.textInput}
-              placeholder="Mật khẩu mới"
-              secureTextEntry
-              value={newPassword}
-              onChangeText={setNewPassword}
-            />
+            <View style={styles.viewTextInput}>
+              <CustomTextInput
+                placeholder="Mật khẩu"
+                secureTextEntry={!newPasswordVisible}
+                value={newPassword}
+                onChangeText={setNewPassword}
+              />
+
+              <TouchableOpacity onPress={newTogglePasswordVisibility}>
+                <Image
+                  style={{ width: 20, height: 14 }}
+                  source={
+                    newPasswordVisible
+                      ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
+                      : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
+                  }
+                />
+              </TouchableOpacity>
+            </View>
 
             <Text style={{ marginTop: 12 }}>Nhập lại mật khẩu mới</Text>
-            <CustomTextInput
-              style={styles.textInput}
-              placeholder="Nhập lại mật khẩu mới"
-              secureTextEntry
-              value={confirmNewPassword}
-              onChangeText={setConfirmNewPassword}
-            />
+            <View style={styles.viewTextInput}>
+              <CustomTextInput
+                placeholder="Mật khẩu"
+                secureTextEntry={!confirmPasswordVisible}
+                value={confirmNewPassword}
+                onChangeText={setConfirmNewPassword}
+              />
+
+              <TouchableOpacity onPress={confirmTogglePasswordVisibility}>
+                <Image
+                  style={{ width: 20, height: 14 }}
+                  source={
+                    confirmPasswordVisible
+                      ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
+                      : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
+                  }
+                />
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
       </View>
@@ -167,25 +212,24 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         </View>
       </Modal>
       <Modal visible={successVisible} animationType="fade" transparent={true}>
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => closeSucces()}
-      >
-        <Text style={styles.closeButtonText}>X</Text>
-      </TouchableOpacity>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../../assets/success.png")}
-          style={styles.image}
-        />
-      </View>
-      <Text style={styles.successText}>Vui lòng đăng nhập lại.</Text>
-    </View>
-  </View>
-</Modal>
-
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => closeSucces()}
+            >
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../../../assets/success.png")}
+                style={styles.image}
+              />
+            </View>
+            <Text style={styles.successText}>Vui lòng đăng nhập lại.</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -265,6 +309,24 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
+  },
+  viewBottom: {
+    flex: 7,
+    backgroundColor: "white",
+    borderTopRightRadius: 60,
+    borderTopLeftRadius: 60,
+    padding: 30,
+  },
+  viewTextInput: {
+    flexDirection: "row",
+    borderColor: "#225254",
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    width: "100%",
+    borderRadius: 8,
+    marginTop: 10,
   },
 });
 
