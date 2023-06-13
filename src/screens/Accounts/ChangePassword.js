@@ -13,14 +13,15 @@ import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 import Header from "../../Shared/Header";
 import ModalPoup from "../../Shared/ModalPopup";
+// import { API_URL_PUT_CHANGE_PASSWORD } from "../../Config/config";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [enterNewPasswordVisible, setEnterNewPasswordVisible] = useState(false);
 
-  const [oldPassword, setOldPassword] = useState("")
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [enterNewPassword, setEnterNewPassword] = ("");
+  const [enterNewPassword, setEnterNewPassword] = useState("");
 
   const toggleNewPasswordVisibility = () => {
     setNewPasswordVisible(!newPasswordVisible);
@@ -29,26 +30,60 @@ const ChangePasswordScreen = ({ navigation }) => {
     setEnterNewPasswordVisible(!enterNewPasswordVisible);
   };
 
+  const handleChangePassword = async () => {
+    if (newPassword !== enterNewPassword) {
+      console.log("mat khau k trung khop");
+      return;
+    }
+
+
+    try {
+      const response = await fetch('http://15.10.111.40:3000/users/update/:id', {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password: newPassword,
+        }),
+      });
+
+      if (response.ok) {
+        // Password successfully changed, handle the success case here
+      } else {
+        // Handle the error case here
+      }
+    } catch (error) {
+      console.log(error);
+      // Handle the error case here
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <Header
-        title="Đổi mật khẩu"
-        onPress={() => navigation.goBack()}
-      />
+      <Header title="Đổi mật khẩu" onPress={() => navigation.goBack()} />
 
       <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
         <View style={styles.viewAddOrEdit}>
-          <ScrollView>
-            <Text style={{ marginTop: 12 }}>Mật khẩu cũ</Text>
+          <Text style={{ marginTop: 12, fontSize: 16, fontWeight: '700', color: "#225254" }}>Mật khẩu cũ</Text>
+          <View style={{ alignItems: "flex-end" }}>
             <CustomTextInput1
-              style={{borderColor: "#225254",
-              borderWidth: 1, borderRadius: 8, paddingHorizontal: 10,marginTop: 3}}
+              style={{
+                borderColor: "#225254",
+                borderWidth: 1,
+                borderRadius: 8,
+                paddingHorizontal: 10,
+                marginTop: 5,
+                width: "90%",
+              }}
               placeholder="Mật khẩu cũ"
               value={oldPassword}
               onChangeText={setOldPassword}
             />
+          </View>
 
-            <Text style={{ marginTop: 12 }}>Mật khẩu mới</Text>
+          <Text style={{ marginTop: 12, fontSize: 16, fontWeight: '700', color: "#225254" }}>Mật khẩu mới</Text>
+          <View style={{ alignItems: "flex-end" }}>
             <View style={styles.viewTextInput}>
               <CustomTextInput
                 placeholder="Mật khẩu mới"
@@ -68,8 +103,10 @@ const ChangePasswordScreen = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
-            
-            <Text style={{ marginTop: 12 }}>Nhập lại mật khẩu mới</Text>
+          </View>
+
+          <Text style={{ marginTop: 12, fontSize: 16, fontWeight: '700', color: "#225254" }}>Nhập lại mật khẩu mới</Text>
+          <View style={{ alignItems: "flex-end" }}>
             <View style={styles.viewTextInput}>
               <CustomTextInput
                 placeholder="Nhập lại mật khẩu mới"
@@ -89,7 +126,7 @@ const ChangePasswordScreen = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </View>
         </View>
       </View>
 
@@ -125,7 +162,7 @@ const ChangePasswordScreen = ({ navigation }) => {
           <CustomButton
             title="Lưu"
             style={{ borderColor: "#ffffff", borderRadius: 20 }}
-            onPress={() => {}}
+            onPress={handleChangePassword}
           />
         </View>
       </View>
@@ -138,24 +175,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   viewAddOrEdit: {
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    margin: 12,
-    padding: 16,
-    width: "90%",
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-
-    elevation: 6,
+    width: "80%",
   },
   viewButton: {
-    flex: 1,
+    flex: 1.5,
     flexDirection: "row",
   },
   textSize: {
@@ -182,9 +205,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
-    width: "100%",
+    width: "90%",
     borderRadius: 8,
-    marginTop: 3
+    marginTop: 5,
+    // marginLeft: 20
   },
 });
 export default ChangePasswordScreen;

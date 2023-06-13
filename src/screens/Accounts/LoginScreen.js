@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
-import { API_URL_LOGIN } from "../../Config/config";
+import { API_URL_LOGIN} from "../../Config/config";
 import ModalPopup from "../../Shared/ModalPopup";
 import useStore from "../../Config/store";
 

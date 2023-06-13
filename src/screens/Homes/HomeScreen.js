@@ -197,7 +197,7 @@ const HomeScreen = ({ navigation }) => {
             style={styles.textSearch}
             placeholder="Tìm kiếm"
             onFocus={() => {
-              navigation.navigate("ChangePW");
+              navigation.navigate("Search");
             }}
           />
           <CustomTextInput />

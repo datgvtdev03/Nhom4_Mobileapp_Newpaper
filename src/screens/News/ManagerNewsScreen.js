@@ -35,7 +35,8 @@ const ManagerNewsScreen = ({ navigation }) => {
       isEditMode: true,
       newsItem: newsItem,
     });
-    // console.log("selectedItem: ", newsItem);
+    console.log("selectedItem: ", newsItem);
+
   };
 
   const getDataFromAPI = async () => {
@@ -86,10 +87,10 @@ const ManagerNewsScreen = ({ navigation }) => {
               </View>
 
               <View style={{ flex: 4 }}>
-                <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>
+                <Text numberOfLines={2} style={{ fontSize: 16, textDecorationLine: "underline" }}>
                   {item.tieuDe}
                 </Text>
-                <Text>{item.noiDung}</Text>
+                <Text numberOfLines={3}>{item.noiDung}</Text>
               </View>
 
               <View

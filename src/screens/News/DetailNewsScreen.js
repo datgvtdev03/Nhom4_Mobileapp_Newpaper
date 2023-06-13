@@ -9,13 +9,14 @@ const DetailNewsScreen = (props) => {
     <View style={styles.container}>
       <Header title={item.theLoai} onPress={() => navigation.goBack()} />
       <ScrollView style={{ padding: 12 }}>
+      <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.tieuDe}</Text>
         <Image
-          style={{ width: "100%", height: 200, borderRadius: 10 }}
+          style={{ width: "100%", height: 200, borderRadius: 10, marginVertical: 8 }}
           source={{ uri: item?.uri }}
         />
 
-        <Text>{item.tieuDe}</Text>
-        <Text>{item.noiDung}</Text>
+        
+        <Text style={{marginBottom: 20}}>{item.noiDung}</Text>
       </ScrollView>
     </View>
   );
