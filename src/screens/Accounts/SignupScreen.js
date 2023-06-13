@@ -46,6 +46,14 @@ const SignupScreen = ({ navigation }) => {
 
 
   const onRegister = () => {
+
+    if (!fullName || !email || !password || !permission) {
+      setNotiFullName("Không bỏ trống họ tên!");
+      setNotiEmail("Không bỏ trống email!");
+      setNotiPassword("Mật khẩu phải có từ 6 đến 12 kí tự!");
+      return;
+    }
+
     if(!validateFullName(fullName)) {
       setNotiFullName("Họ và tên không hợp lệ!");
       return;

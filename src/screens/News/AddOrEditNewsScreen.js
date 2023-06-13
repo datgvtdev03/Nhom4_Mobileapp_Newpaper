@@ -20,18 +20,28 @@ import ModalPoup from "../../Shared/ModalPopup";
 
 import { API_URL_POST_POSTS } from "../../Config/config";
 const AddOrEditNewsScreen = ({ navigation, route}) => {
-  const { isEditMode, newsItem } = route?.params;
+  // const { isEditMode, newsItem } = route?.params;
 
   // const { user } = route.params;
 
-  const [image, setImage] = useState(isEditMode ? newsItem.uri : null);
+  // const [image, setImage] = useState(isEditMode ? newsItem.uri : null);
+  const [image, setImage] = useState("");
+  // const [location, setLocation] = useState(
+  //   isEditMode ? newsItem.location : null
+  // );
+  // const [tieuDe, setTieuDe] = useState(isEditMode ? newsItem.tieuDe : "");
+  // const [noiDung, setNoiDung] = useState(isEditMode ? newsItem.noiDung : "");
+  // const [selectedTheLoai, setSelectedTheLoai] = useState(
+  //   isEditMode ? newsItem.theLoai : null
+  // );
+
   const [location, setLocation] = useState(
-    isEditMode ? newsItem.location : null
+    "" 
   );
-  const [tieuDe, setTieuDe] = useState(isEditMode ? newsItem.tieuDe : "");
-  const [noiDung, setNoiDung] = useState(isEditMode ? newsItem.noiDung : "");
+  const [tieuDe, setTieuDe] = useState("");
+  const [noiDung, setNoiDung] = useState("");
   const [selectedTheLoai, setSelectedTheLoai] = useState(
-    isEditMode ? newsItem.theLoai : null
+    ""
   );
 
   const [successModalVisible, setSuccessModalVisible] = useState(false);
@@ -41,20 +51,20 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
     checkPermission();
   }, []);
 
-  useEffect(() => {
-    if (!newsItem) {
-      console.log("Missing news item data");
-      return;
-    }
-    console.log("newsItem: ",newsItem);
-    console.log("dataa nhan: ",newsItem.theLoai);
+  // useEffect(() => {
+  //   if (!newsItem) {
+  //     console.log("Missing news item data");
+  //     return;
+  //   }
+  //   console.log("newsItem: ",newsItem);
+  //   console.log("dataa nhan: ",newsItem.theLoai);
   
-    setImage(newsItem.uri);
-    setLocation(newsItem.location);
-    setTieuDe(newsItem.tieuDe);
-    setNoiDung(newsItem.noiDung);
-    setSelectedTheLoai(newsItem.selectedTheLoai);
-  }, [newsItem]);
+  //   setImage(newsItem.uri);
+  //   setLocation(newsItem.location);
+  //   setTieuDe(newsItem.tieuDe);
+  //   setNoiDung(newsItem.noiDung);
+  //   setSelectedTheLoai(newsItem.selectedTheLoai);
+  // }, [newsItem]);
 
   const checkPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -149,8 +159,9 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
     }
 
     try {
-      const url = isEditMode ? `${API_URL_POST_POSTS}/${newsItem.id}` : API_URL_POST_POSTS;
-      const method =  isEditMode ? "PUT" : "POST";
+      // const url = isEditMode ? `${API_URL_POST_POSTS}/${newsItem.id}` : API_URL_POST_POSTS;
+      const url = API_URL_POST_POSTS
+      const method =  "POST";
 
       const response = await fetch(url, {
         method: method,
@@ -187,7 +198,8 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        title={isEditMode ? "Chỉnh sửa bài viết" : "Thêm bài viết"}
+        // title={isEditMode ? "Chỉnh sửa bài viết" : "Thêm bài viết"}
+        title= "Thêm bài viết"
         onPress={() => navigation.navigate("Home")}
       />
 

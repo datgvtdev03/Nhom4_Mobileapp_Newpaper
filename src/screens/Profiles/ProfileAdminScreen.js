@@ -48,7 +48,7 @@ const ProfileScreenAdmin = ({ navigation }) => {
 
         <View style={{ marginTop: 12 }}>
           <Text style={{ fontWeight: "700", color: "#225254", fontSize: 16 }}>
-            Họ và tên: {userInfo.fullName}{" "}
+            Họ và tên: {userInfo.fullName}
           </Text>
           <View
             style={{ borderWidth: 0.3, marginTop: 12, borderColor: "#225254" }}
