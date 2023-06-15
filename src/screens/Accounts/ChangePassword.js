@@ -132,7 +132,8 @@ const ChangePasswordScreen = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
 
-            <Text style={{ marginTop: 12 }}>Mật khẩu mới</Text>
+          <Text style={{ marginTop: 12, fontSize: 16, fontWeight: '700', color: "#225254" }}>Mật khẩu mới</Text>
+          <View style={{ alignItems: "flex-end" }}>
             <View style={styles.viewTextInput}>
               <CustomTextInput
                 placeholder="Mật khẩu"
@@ -173,6 +174,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
+          </View>
           </ScrollView>
         </View>
       </View>
@@ -261,7 +263,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   viewButton: {
-    flex: 1,
+    flex: 1.5,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -327,7 +329,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
-    width: "100%",
+    width: "90%",
     borderRadius: 8,
     marginTop: 10,
   },

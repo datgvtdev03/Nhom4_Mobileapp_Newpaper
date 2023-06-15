@@ -38,7 +38,7 @@ const ProfileScreenAdmin = ({ navigation }) => {
     <View style={styles.container}>
       <Header title="Hồ sơ của tôi" onPress={() => navigation.goBack()} />
 
-      <View style={{ flex: 4, justifyContent: "center", padding: 12 }}>
+      <View style={{ flex: 4, justifyContent: "center", padding: 12, marginTop: 20 }}>
         <View style={{ alignItems: "center" }}>
           <Image source={require("../../../assets/profile.png")} />
         </View>

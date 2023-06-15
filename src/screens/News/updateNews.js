@@ -18,21 +18,27 @@ import * as Location from "expo-location";
 import { BottomPopup } from "../../Shared/BottomPopup";
 import ModalPoup from "../../Shared/ModalPopup";
 
-import { API_URL_POST_POSTS } from "../../Config/config";
-const AddOrEditNewsScreen = ({ navigation, route}) => {
+import { API_URL_POST_POSTS, API_URL_PUT_POSTS } from "../../Config/config";
+const UpdateNews = ({ navigation, route }) => {
+  const { news } = route.params;
 
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(news.uri);
   const [location, setLocation] = useState(null);
-  const [tieuDe, setTieuDe] = useState("");
-  const [noiDung, setNoiDung] = useState("");
+  const [tieuDe, setTieuDe] = useState(news.tieuDe);
+  const [noiDung, setNoiDung] = useState(news.noiDung);
 
+  const [reselectedPhoto, setReselectedPhoto] = useState("");
+
+  //   const imageTG = ""
   const [selectedTheLoai, setSelectedTheLoai] = useState(null);
-
+  const [index, setIndex] = useState(0);
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
 
   useEffect(() => {
     checkPermission();
+    setTheLoai();
+    console.log(news);
   }, []);
 
   const checkPermission = async () => {
@@ -58,6 +64,7 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
   };
 
   const selectImage = async () => {
+    // setReselectedPhoto("");
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       console.log("Permission not granted!");
@@ -72,7 +79,10 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
         type: result.assets[0].type,
         name: "image.jpg",
       };
-      setImage(selectedImage);
+      //   setCheckImage(false)
+      setReselectedPhoto(selectedImage);
+      //   imageTG(image.uri)
+      //   setImage(imageTG)
     }
   };
 
@@ -117,21 +127,29 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
     setImage(null);
     setTieuDe("");
     setNoiDung("");
+    setReselectedPhoto("");
     setSelectedTheLoai(null);
-    navigation.navigate("Home");
+    navigation.navigate("ManagerNews");
   };
 
-  
+  const setTheLoai = () => {
+    dataTheLoai.forEach((element) => {
+      if ((element.name === news.theLoai)) {
+        setIndex(element.id);
+      }
+    });
+    setSelectedTheLoai(dataTheLoai[index]);
+  };
 
-  const themBaiViet = async () => {
-    if (!image || !tieuDe || !noiDung || !selectedTheLoai) {
+  const suaBaiViet = async () => {
+    if (!tieuDe || !noiDung || !selectedTheLoai) {
       openModalFail();
       return;
     }
 
     try {
-      const url = API_URL_POST_POSTS;
-      const method = "POST";
+      const url = API_URL_PUT_POSTS + news.id;
+      const method = "PUT";
 
       const response = await fetch(url, {
         method: method,
@@ -141,22 +159,24 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
         },
 
         body: JSON.stringify({
-          uri: String(image.uri),
+        uri: reselectedPhoto !== "" ? String(reselectedPhoto.uri) : String(image),
           tieuDe: tieuDe,
           noiDung: noiDung,
-          theLoai: selectedTheLoai?.name,
+          theLoai: selectedTheLoai.name,
         }),
       });
 
       if (response.ok) {
-        console.log("Product added successfully: ", );
+        console.log("Product added successfully: ");
         openSuccessModal();
 
         setImage(null);
         setTieuDe("");
         setNoiDung("");
+        setReselectedPhoto("");
         setSelectedTheLoai(null);
-        // navigation.navigate("Home")
+        console.log(selectedTheLoai.name);
+        navigation.navigate("ManagerNews")
       } else {
         console.error("Failed to add product");
       }
@@ -168,8 +188,8 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        title={"Thêm bài viết"}
-        onPress={() => navigation.navigate("Home")}
+        title={"Sửa bài viết"}
+        onPress={() => navigation.navigate("ManagerNews")}
       />
 
       <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
@@ -177,9 +197,15 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
           <ScrollView>
             <Text>Ảnh</Text>
             <View style={{ alignItems: "center", justifyContent: "center" }}>
-              {image && (
-                <Image source={{ uri: image.uri }} style={styles.image} />
+              {reselectedPhoto === "" ? (
+                <Image source={{ uri: image }} style={styles.image} />
+              ) : (
+                <Image
+                  source={{ uri: reselectedPhoto.uri }}
+                  style={styles.image}
+                />
               )}
+
               <TouchableOpacity
                 onPress={selectImage}
                 style={{
@@ -218,7 +244,7 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
             <Text style={{ marginTop: 12 }}>Thể loại</Text>
             <TouchableWithoutFeedback onPress={onShowPopupTheLoai}>
               <Text style={styles.textSize}>
-                {selectedTheLoai ? selectedTheLoai : "-Chọn thể loại-"}
+                {selectedTheLoai ? selectedTheLoai.name : "-Chọn thể loại-"}
               </Text>
             </TouchableWithoutFeedback>
             <BottomPopup
@@ -264,8 +290,8 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
           <CustomButton
             title="Lưu"
             style={{ borderColor: "#ffffff", borderRadius: 20 }}
-            onPress={themBaiViet}
-            disabled={!image || !tieuDe || !noiDung || !selectedTheLoai}
+            onPress={suaBaiViet}
+            disabled={!tieuDe || !noiDung || !selectedTheLoai}
           />
 
           <ModalPoup visible={successModalVisible}>
@@ -368,4 +394,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddOrEditNewsScreen;
+export default UpdateNews;
