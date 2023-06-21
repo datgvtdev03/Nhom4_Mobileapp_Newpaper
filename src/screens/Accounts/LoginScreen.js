@@ -204,11 +204,6 @@ const LoginScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Signup")}
         />
 
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-            <Text style={{ textDecorationLine: "underline" }}>Bỏ qua</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );
