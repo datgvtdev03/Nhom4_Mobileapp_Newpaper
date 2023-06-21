@@ -27,13 +27,12 @@ const ProfileScreen = ({ navigation }) => {
   };
  
   const handleLogout = () => {
-
-    // logout();
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: "Login" }],
-    // })
-    navigation.navigate("Login")
+    logout();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    })
+    // navigation.navigate("Login")
   }
 
   return (
@@ -92,9 +91,10 @@ const ProfileScreen = ({ navigation }) => {
       />
 
       <View style={{ flex: 6, marginHorizontal: 12, marginTop: 12 }}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ChangePW')}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ChangePW', {account: userInfo} )}>
           <Text style={{color: '#ffffff'}}>Đổi mật khẩu</Text>
         </TouchableOpacity>
+        
         <TouchableOpacity style={styles.button} onPress={openModal}>
           <Text style={{color: '#ffffff'}}>Đăng xuất</Text>
         </TouchableOpacity>

@@ -48,7 +48,7 @@ const ProfileScreenAdmin = ({ navigation }) => {
 
         <View style={{ marginTop: 12 }}>
           <Text style={{ fontWeight: "700", color: "#225254", fontSize: 16 }}>
-            Họ và tên: {userInfo.fullName}{" "}
+            Họ và tên: {userInfo.fullName}
           </Text>
           <View
             style={{ borderWidth: 0.3, marginTop: 12, borderColor: "#225254" }}
@@ -94,7 +94,7 @@ const ProfileScreenAdmin = ({ navigation }) => {
           <Text style={{color: '#ffffff'}}>Danh sách bài viết</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ChangePW")}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ChangePW", {account: userInfo})}>
           <Text style={{color: '#ffffff'}}>Đổi mật khẩu</Text>
         </TouchableOpacity>
 

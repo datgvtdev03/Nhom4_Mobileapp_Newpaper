@@ -94,7 +94,6 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
     { id: 3, name: "Thể thao" },
     { id: 4, name: "Pháp luật" },
     { id: 5, name: "Giáo dục" },
-    { id: 5, name: "Giáo dục" },
     { id: 6, name: "Kinh tế" },
   ];
 
@@ -157,6 +156,7 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
         setTieuDe("");
         setNoiDung("");
         setSelectedTheLoai(null);
+        // navigation.navigate("Home")
       } else {
         console.error("Failed to add product");
       }

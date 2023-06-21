@@ -89,6 +89,10 @@ const HomeScreen = ({ navigation }) => {
         (item) => item?.theLoai === selectedButton
       );
 
+      // const filteredData = data.filter(
+      //   (item) => item.theLoai && item.theLoai.name === selectedButton
+      // );
+
       if (filteredData.length > 0) {
         return (
           <FlatList

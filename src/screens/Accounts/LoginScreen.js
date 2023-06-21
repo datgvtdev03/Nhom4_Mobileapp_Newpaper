@@ -93,7 +93,6 @@ const LoginScreen = ({ navigation }) => {
         })
         .catch((error) => {
           console.error("Lỗi kết nối:", error);
-          // Xử lý lỗi kết nối API
         });
     }
   };

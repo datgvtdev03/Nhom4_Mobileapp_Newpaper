@@ -14,6 +14,7 @@ import ModalPoup from "../../Shared/ModalPopup";
 
 const ManagerNewsScreen = ({ navigation }) => {
   const [dataNews, setDataNews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [alertModal, setAlertModal] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
@@ -30,12 +31,13 @@ const ManagerNewsScreen = ({ navigation }) => {
     getDataFromAPI();
   }, []);
 
+  const handleRefresh = () => {
+    setIsLoading(true);
+    getDataFromAPI();
+  };
+
   const handleEdit = (newsItem) => {
-    navigation.navigate("ADD", {
-      isEditMode: true,
-      newsItem: newsItem,
-    });
-    console.log("selectedItem: ", newsItem);
+    navigation.navigate("Update", { news: newsItem });
   };
 
   const getDataFromAPI = async () => {
@@ -43,6 +45,7 @@ const ManagerNewsScreen = ({ navigation }) => {
       const response = await fetch(API_URL_GET_POSTS);
       const data = await response.json();
       setDataNews(data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -63,12 +66,14 @@ const ManagerNewsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header title="Danh sách bài viết" onPress={() => navigation.goBack()} />
+      <Header title="Danh sách bài viết" onPress={() => navigation.navigate("Home")} />
       <FlatList
         data={dataNews}
         renderItem={({ item }) => (
           <View style={styles.viewItems}>
-            <TouchableOpacity onPress={() => navigation.navigate("DetailNews",  {item: item})}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("DetailNews", { item: item })}
+            >
               <View style={{ flex: 1, marginBottom: 5 }}>
                 <Text style={{ color: "gray" }}>{item?.theLoai}</Text>
               </View>
@@ -170,6 +175,9 @@ const ManagerNewsScreen = ({ navigation }) => {
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}
+        extraData={isLoading} // Đưa isLoading vào extraData
+        onRefresh={handleRefresh} // Xử lý refresh khi kéo xuống
+        refreshing={isLoading} // 
       />
     </View>
   );

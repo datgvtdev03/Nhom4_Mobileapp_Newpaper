@@ -1,20 +1,11 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 import { API_URL_SIGNUP } from "../../Config/config";
-import ModalPoup from "../../Shared/ModalPopup";
 
 const SignupScreen = ({ navigation }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,56 +46,48 @@ const SignupScreen = ({ navigation }) => {
 
 
   const onRegister = () => {
-    let isValid = true;
+
+    if (!fullName || !email || !password || !permission) {
+      setNotiFullName("Không bỏ trống họ tên!");
+      setNotiEmail("Không bỏ trống email!");
+      setNotiPassword("Mật khẩu phải có từ 6 đến 12 kí tự!");
+      return;
+    }
 
     if(!validateFullName(fullName)) {
       setNotiFullName("Họ và tên không hợp lệ!");
-      isValid = false;
-    } else {
-      setNotiFullName("");
-    }
-
-    if(!validateEmail(email)) {
+      return;
+    } else if(!validateEmail(email)) {
       setNotiEmail("Email không hợp lệ!");
-      isValid = false;
-    } else {
-      setNotiEmail("");
-    }
-
-    if(!validatePassword(password)) {
+      return;
+    } else if(!validatePassword(password)) {
       setNotiPassword("Mật khẩu phải có từ 6 đến 12 kí tự!");
-      isValid = false;
-    } else {
-      setNotiPassword("");
+      return;
     }
 
-    if(isValid) {
-      const data = {
-        fullName: fullName,
-        email: email,
-        password: password,
-        permission: permission
-      };
-  
-      fetch(API_URL_SIGNUP, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+    const data = {
+      fullName: fullName,
+      email: email,
+      password: password,
+      permission: permission
+    };
+
+    fetch(API_URL_SIGNUP, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(response => {
+        Alert.alert("Đăng ký thành công");
+        navigation.navigate("Login");
       })
-        .then(response => response.json())
-        .then(response => {
-          Alert.alert("Đăng ký thành công!");
-          navigation.navigate("Login");
-        })
-        .catch(err => {
-          Alert.alert("Đăng ký không thành công");
-          console.log(err);
-        });
-    }
-
-    
+      .catch(err => {
+        Alert.alert("Đăng ký không thành công");
+        console.log(err);
+      });
   
   };
 
@@ -206,6 +189,7 @@ const SignupScreen = ({ navigation }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -242,4 +226,5 @@ const styles = StyleSheet.create({
     color: 'red'
   },
 });
+
 export default SignupScreen;
