@@ -218,7 +218,7 @@ const AddOrEditNewsScreen = ({ navigation, route}) => {
             <Text style={{ marginTop: 12 }}>Thể loại</Text>
             <TouchableWithoutFeedback onPress={onShowPopupTheLoai}>
               <Text style={styles.textSize}>
-                {selectedTheLoai ? selectedTheLoai : "-Chọn thể loại-"}
+                {selectedTheLoai ? selectedTheLoai.name : "-Chọn thể loại-"}
               </Text>
             </TouchableWithoutFeedback>
             <BottomPopup

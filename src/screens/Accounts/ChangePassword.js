@@ -103,7 +103,6 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
   return (
-    <safeAreaView>
     <View style={{ flex: 1 }}>
       <Header title="Đổi mật khẩu" onPress={() => navigation.goBack()} />
 
@@ -235,7 +234,6 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         </View>
       </Modal>
     </View>
-    </safeAreaView>
   );
 };
 

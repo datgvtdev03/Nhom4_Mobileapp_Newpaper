@@ -64,65 +64,68 @@ const ManagerNewsScreen = ({ navigation }) => {
         data={dataNews}
         renderItem={({ item }) => (
           <View style={styles.viewItems}>
-            <View style={{ flex: 1, marginBottom: 5 }}>
-              <Text style={{ color: "gray" }}>{item?.theLoai}</Text>
-            </View>
-
-            <View
-              style={{
-                flex: 5,
-                flexDirection: "row",
-              }}
-            >
-              <View style={{ flex: 2 }}>
-                <Image
-                  source={{ uri: item?.uri }}
-                  style={{ height: 100, borderRadius: 20, marginRight: 5 }}
-                />
-              </View>
-
-              <View style={{ flex: 4 }}>
-                <Text numberOfLines={2} style={{ fontSize: 16, textDecorationLine: "underline" }}>
-                  {item.tieuDe}
-                </Text>
-                <Text numberOfLines={3}>{item.noiDung}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("DetailNews",  {item: item})}>
+              <View style={{ flex: 1, marginBottom: 5 }}>
+                <Text style={{ color: "gray" }}>{item?.theLoai}</Text>
               </View>
 
               <View
                 style={{
-                  flex: 0.6,
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  flex: 5,
+                  flexDirection: "row",
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelectedItemId(item.id);
-                    openModal();
-                  }}
+                <View style={{ flex: 2 }}>
+                  <Image
+                    source={{ uri: item?.uri }}
+                    style={{ height: 100, borderRadius: 20, marginRight: 5 }}
+                  />
+                </View>
+
+                <View style={{ flex: 4 }}>
+                  <Text
+                    numberOfLines={2}
+                    style={{ fontSize: 16, textDecorationLine: "underline" }}
+                  >
+                    {item.tieuDe}
+                  </Text>
+                  <Text numberOfLines={3}>{item.noiDung}</Text>
+                </View>
+
+                <View
                   style={{
-                    flex: 1,
+                    flex: 0.6,
+                    flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <Image source={require("../../../assets/delete.png")} />
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedItemId(item.id);
+                      openModal();
+                    }}
+                    style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Image source={require("../../../assets/delete.png")} />
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => handleEdit(item)}
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Image source={require("../../../assets/edit.png")} />
-                </TouchableOpacity>
-
-              </View>
-              <ModalPoup visible={alertModal}>
+                  <TouchableOpacity
+                    onPress={() => handleEdit(item)}
+                    style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Image source={require("../../../assets/edit.png")} />
+                  </TouchableOpacity>
+                </View>
+                <ModalPoup visible={alertModal}>
                   <Text
                     style={{ marginTop: 0, fontSize: 20, textAlign: "center" }}
                   >
@@ -158,7 +161,8 @@ const ManagerNewsScreen = ({ navigation }) => {
                     </TouchableOpacity>
                   </View>
                 </ModalPoup>
-            </View>
+              </View>
+            </TouchableOpacity>
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}
