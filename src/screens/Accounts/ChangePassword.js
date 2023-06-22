@@ -14,7 +14,7 @@ import {
 import CustomTextInput from "../../Shared/CustomTextInput";
 import CustomButton from "../../Shared/CustomButton";
 import Header from "../../Shared/Header";
-import { API_URL_USER_CHANGEPASSWORD } from "../../Config/config";
+import { API_URL_PUT_CHANGE_PASSWORD } from "../../Config/config";
 
 const ChangePasswordScreen = ({ navigation, route }) => {
   const { account } = route.params;
@@ -54,7 +54,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     }
 
     // Gọi API để thay đổi mật khẩu
-    fetch(API_URL_USER_CHANGEPASSWORD + idAccount, {
+    fetch(API_URL_PUT_CHANGE_PASSWORD + idAccount, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -109,8 +109,8 @@ const ChangePasswordScreen = ({ navigation, route }) => {
       <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
         <View style={styles.viewAddOrEdit}>
           <ScrollView>
-            <Text style={{ marginTop: 12 }}>Mật khẩu cũ</Text>
-
+            <Text style={{ marginTop: 12, fontSize: 16, fontWeight: '700', color: "#225254" }}>Mật khẩu cũ</Text>
+            <View style={{ alignItems: "flex-end" }}>
             <View style={styles.viewTextInput}>
               <CustomTextInput
                 placeholder="Mật khẩu"
@@ -129,6 +129,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                   }
                 />
               </TouchableOpacity>
+            </View>
             </View>
 
           <Text style={{ marginTop: 12, fontSize: 16, fontWeight: '700', color: "#225254" }}>Mật khẩu mới</Text>
@@ -152,28 +153,33 @@ const ChangePasswordScreen = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
-
-            <Text style={{ marginTop: 12 }}>Nhập lại mật khẩu mới</Text>
-            <View style={styles.viewTextInput}>
-              <CustomTextInput
-                placeholder="Mật khẩu"
-                secureTextEntry={!confirmPasswordVisible}
-                value={confirmNewPassword}
-                onChangeText={setConfirmNewPassword}
-              />
-
-              <TouchableOpacity onPress={confirmTogglePasswordVisibility}>
-                <Image
-                  style={{ width: 20, height: 14 }}
-                  source={
-                    confirmPasswordVisible
-                      ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
-                      : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
-                  }
-                />
-              </TouchableOpacity>
-            </View>
           </View>
+
+            <Text style={{ marginTop: 12, fontSize: 16, fontWeight: '700', color: "#225254" }}>Nhập lại mật khẩu mới</Text>
+            <View style={{ alignItems: "flex-end" }}>
+              <View style={styles.viewTextInput}>
+                <CustomTextInput
+                  placeholder="Mật khẩu"
+                  secureTextEntry={!confirmPasswordVisible}
+                  value={confirmNewPassword}
+                  onChangeText={setConfirmNewPassword}
+                />
+
+                <TouchableOpacity onPress={confirmTogglePasswordVisibility}>
+                  <Image
+                    style={{ width: 20, height: 14 }}
+                    source={
+                      confirmPasswordVisible
+                        ? require("../../../assets/hidden.png") // Đường dẫn đến hình ảnh khi mật khẩu ẩn
+                        : require("../../../assets/view.png") // Đường dẫn đến hình ảnh khi mật khẩu hiển thị
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+          {/* </View> */}
+
           </ScrollView>
         </View>
       </View>
@@ -189,6 +195,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
 
         <View style={styles.buttonContainer}>
           <CustomButton
+            style={{borderRadius: 20}}
             title="Lưu"
             onPress={() => handleChangePassword(account.id)}
           />
@@ -253,6 +260,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 6,
   },
+
   textInput: {
     borderColor: "#225254",
     borderWidth: 1,

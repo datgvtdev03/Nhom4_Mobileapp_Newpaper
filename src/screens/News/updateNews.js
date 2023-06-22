@@ -176,7 +176,13 @@ const UpdateNews = ({ navigation, route }) => {
         setReselectedPhoto("");
         setSelectedTheLoai(null);
         console.log(selectedTheLoai.name);
-        navigation.navigate("ManagerNews")
+        // navigation.reset({
+        //   index: 0,
+        //   routes: [{ name: "ManagerNews" }],
+        // })
+        // navigation.goBack();
+        // navigation.goBack();
+        navigation.replace('ManagerNews');
       } else {
         console.error("Failed to add product");
       }
@@ -189,7 +195,7 @@ const UpdateNews = ({ navigation, route }) => {
     <View style={{ flex: 1 }}>
       <Header
         title={"Sửa bài viết"}
-        onPress={() => navigation.navigate("ManagerNews")}
+        onPress={() => navigation.goBack()}
       />
 
       <View style={{ flex: 9, alignItems: "center", justifyContent: "center" }}>
