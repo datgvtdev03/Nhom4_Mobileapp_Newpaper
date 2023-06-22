@@ -46,6 +46,13 @@ const ChangePasswordScreen = ({ navigation, route }) => {
       return;
     }
 
+
+    if (newPassword.length < 8) {
+      setErrorVisible(true);
+      setErrorMessage("Mật khẩu mới phải từ 8 ký tự.");
+      return;
+    }
+
     // Kiểm tra mật khẩu mới và mật khẩu xác nhận phải trùng nhau
     if (newPassword !== confirmNewPassword) {
       setErrorVisible(true);
